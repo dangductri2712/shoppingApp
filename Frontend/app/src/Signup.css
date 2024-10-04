@@ -1,0 +1,20 @@
+.inputBox{
+    position:absolute;
+    right: 0px;
+  }
+
+.cardBody{
+    position: relative;
+}
+
+#inputCard{
+    position: absolute;
+    right: 45vw; 
+}
+
+/* @media only screen and (max-width: 508px){
+    #inputCard{
+        position: absolute;
+        right: 30px;
+    }
+} */
