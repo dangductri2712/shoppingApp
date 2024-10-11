@@ -14,6 +14,11 @@
 }
 
 
+#account-button{
+  position: absolute;
+  right: 0px;
+}
+
 .navigation-links{
   margin-left: 100px;
   color: var(--even-background-color);

@@ -16,6 +16,20 @@ exports.listAllUsers = async (req,res)=>{
 }
 
 
+exports.getSpecificUser = async (req, res)=>{
+    console.log("get specific user based on email");
+    try{
+        const user = await items.collection("users").findOne({email: req.params.email});
+    console.log(user);
+    res.status(200).send(user);
+    }
+    catch(err){
+        console.log("Error at getSpecificUser: "+ err);
+        res.status(500).send(err);
+    }
+}
+
+
 exports.insertUser = async (req,res)=>{
     console.log("insert user");
    
@@ -115,4 +129,59 @@ exports.checkForLogin = async (req,res)=>{
     catch(err){
         console.log(err);
     }
+}
+
+
+exports.userLogIn = async (req,res)=>{
+    console.log("Set login status for user");
+    console.log(req.params.uid);
+    const filter = {userID: req.params.uid};
+    const options = {upsert: true};   //only update if there is no identical documents.
+
+    const updateDoc = {
+        $set: {
+            name: req.body.name != null? req.body.name : "unknown",
+            email: req.body.email != null? req.body.email : "unknown",
+            status: req.body.status   //status might be login or logout
+        }
+    }
+    try{
+        await items.collection("users").updateOne(filter,updateDoc, options);
+        const user = await items.collection("users").find({userID: req.params.uid}).toArray(function(err, result) {
+            if (err) throw err;
+            console.log(result);
+            db.close();
+        });
+        res.status(200).send(user);
+    }
+    catch(err){
+        console.log("Error at logging into user: "+err);
+    }
+    
+}
+
+exports.checkLoginStatus = async (req,res)=>{
+
+    if(req.params.uid == 0){
+        res.status(200).send({login: false});
+    }
+    else if(req.params.uid > 0){
+        console.log("Checking for login status of designated user");
+        try{
+            const selectedUser = await items.collection("users").findOne({userID: req.params.uid});
+            if(selectedUser.status == "login"){
+                res.status(200).send({login: true})
+            }
+            else{
+                res.status(200).send({login: false});
+            }
+        }
+        catch(err){
+            console.log("Error at checking for log in status: "+ err);
+        }
+    }
+    else{
+        res.status(500).send("Invalid request to check for login. Please check your uid");
+    }
+    
 }

@@ -35,7 +35,7 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
 }, [name, password, email])
   return(
       <>
-        <Header loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}></Header>
+        {/* <Header loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}></Header> */}
         <Card id = "inputCard" style={{ width: '20rem'}} className = "mt-3 mx-auto">
       <Card.Img variant="top" src= "http://localhost:8080/account.jpg" alt = "No image " />
       <Card.Body className = "cardBody">
@@ -52,7 +52,12 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
           })
           .catch(err=>{
               alert("Something is wrong. Please check again");
+              console.log(err);
           })
+
+          //store user and password on client's browser
+
+          localStorage.setItem("email", `${postBody.email}`);
           }
           else{
             alert("The information can not be empty");
@@ -83,16 +88,7 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
 
 const Profile = ({user,loggedIn, setLoggedIn, changeUser})=>{
     return(
-      <>
-        {user.name == "default"?
-        <>
           <Login setLoggedIn={setLoggedIn} changeUser = {changeUser} loggedIn = {loggedIn}></Login>
-        </>
-        :
-        <UserProfile user = {user} setLoggedIn={setLoggedIn} changeUser = {changeUser} loggedIn = {loggedIn}></UserProfile>
-      }
-      </>
-      
     )
    
     }

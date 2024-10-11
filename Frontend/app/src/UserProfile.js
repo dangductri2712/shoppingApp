@@ -2,29 +2,42 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Header from './Header';
 import axios from 'axios';
+
 import {useState, useEffect} from 'react';
-const UserProfile = ({user, loggedIn, setLoggedIn})=>{
-    console.log(user);
+import {findUserInfo} from './findUserInfo.js';
+const UserProfile = ()=>{
+    const [selectedUser, setSelectedUser] = useState({name: "default", email: "email"});
+
+    const getUserInfo = async ()=>{
+        const tempUser = await findUserInfo(localStorage.email);
+        setSelectedUser(tempUser);
+    }
+    useEffect(()=>{
+        getUserInfo();
+    }, [])
+    
+    
     return(
         <>
-            <Header loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}></Header>
+            {/* <Header loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}></Header> */}
             <Row style = {{backgroundColor: "#28D095"}}>
                 <Col sm = "6" >
                     <img src = "http://localhost:8080/account.jpg" style = {{width: "20rem",    borderRadius: "50%"}}></img>
                 </Col>
                 <Col sm = "6">
                     <div>
-                        <h3>{user.name}</h3>
-                        <h5>{user.email}</h5>
+                        <h3>{selectedUser.name}</h3>
+                        <h5>{selectedUser.email}</h5>
                     </div>
                 </Col>
             </Row>
-            <ItemHistory user = {user}></ItemHistory>
+            <ItemHistory user = {selectedUser}></ItemHistory>
         </>
     )
 }
 
 const ItemHistory = ({user})=>{
+    console.log(user.name);
     const [history, setHistory] = useState({});
 
     useEffect(()=>{
@@ -49,7 +62,6 @@ const ItemHistory = ({user})=>{
                             <li>{item.name}</li>
                             <li>{item.seller}</li>
                         </>
-                        
                     )
                 })
             }

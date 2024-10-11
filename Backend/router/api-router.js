@@ -18,11 +18,18 @@ router.route('/items/:id').put((req,res)=> {
     Items.updateItem(req,res);
 })
 
+
+//routes to check for users
 router.route('/users/signup').get((req,res)=>{
     Users.listAllUsers(req,res);
 })
 .post((req,res)=>{
     Users.insertUser(req,res);
+})
+
+//get specific users based on email
+router.route('/user/:email').get((req,res)=>{
+    Users.getSpecificUser(req,res);
 })
 
 router.route('/users/login').post((req,res)=>{
@@ -31,6 +38,13 @@ router.route('/users/login').post((req,res)=>{
 
 router.route('/users/history/:uid').get((req,res)=>{
     History.viewHistory(req,res);
+})
+
+router.route('/users/:uid').put((req,res)=>{
+    Users.userLogIn(req,res);
+})
+.get((req,res)=>{
+    Users.checkLoginStatus(req,res);
 })
 
 module.exports = router;

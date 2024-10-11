@@ -24,7 +24,7 @@ const Signup = ({loggedIn, setLoggedIn})=>{
     }
     return(
         <>
-          <Header></Header>
+          {/* <Header></Header> */}
           <Card id = "inputCard" style={{ width: '20rem'}} className = "mt-3 mx-auto">
         <Card.Img variant="top" src= "http://localhost:8080/account.jpg" alt = "No image " />
         <Card.Body className = "cardBody">

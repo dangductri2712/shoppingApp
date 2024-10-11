@@ -16,21 +16,10 @@ function Home() {
   var evenOdd = 0;
   return (
     <>
-      <Header></Header>
       <div>
       <div id = "background_start" style = {{zIndex: "-999", backgroundColor: "#28D095", width: "100vw", height: "100vh", position: "absolute", top: "0px"}}>
 
       </div>
-      {/* <div id = "home_image">
-        <div id = "intro_img">
-          <img src = "http://localhost:8080/main_page.jpg"  id = "homeImage" ></img>
-        </div>
-        <div id = "intro" >
-          <h3>Hi there</h3>
-          <h3 style = {{color: "#CF6C2F"}}>This is Tri's Shopping App</h3>
-          <h5>Discover a smarter, faster, and more enjoyable way to shop with ShopEase, the app designed to revolutionize your retail experience. Whether you’re hunting for the latest fashion trends, unbeatable deals, or everyday essentials, ShopEase is your one-stop destination.</h5>
-        </div>
-      </div> */}
       <Row>
         <Col xs = {12} sm = {12} lg = {6}>
           <div id = "intro_img">
@@ -41,7 +30,7 @@ function Home() {
         <div id = "intro" >
           <h3>Hi there</h3>
           <h3 style = {{color: "#CF6C2F"}}>This is Tri's Shopping App</h3>
-          <h5>Discover a smarter, faster, and more enjoyable way to shop with ShopEase, the app designed to revolutionize your retail experience. Whether you’re hunting for the latest fashion trends, unbeatable deals, or everyday essentials, ShopEase is your one-stop destination.</h5>
+          <h5>Discover a smarter, faster, and more enjoyable way to shop with T.R.I, the app designed to revolutionize your retail experience. Whether you’re hunting for the latest fashion trends, unbeatable deals, or everyday essentials, ShopEase is your one-stop destination.</h5>
         </div>
         </Col>
       </Row>
@@ -105,9 +94,9 @@ const Features = ({feature, evenOdd})=>{
   console.log(evenOdd);
   return(
     // <li>{feature}</li>
-      <Col sm = {12} xs = {12} className = "mb-5">
+      <Col sm = {12} xs = {12} className = "mb-5 ">
            <div className = "feature  feature-box">
-              <h5 >{feature}</h5>
+              <h5 className = "pt-2">{feature}</h5>
           </div>
       </Col>
   )

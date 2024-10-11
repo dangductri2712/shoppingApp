@@ -7,7 +7,7 @@ const Popup = ({handleShow, handleClose, show, name, price, addToCart})=>{
     return(
         <>
         <Button variant="primary" onClick={handleShow}>
-          Launch demo modal
+          Add to cart
         </Button>
   
         <Modal show={show} onHide={handleClose}>

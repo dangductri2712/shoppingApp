@@ -10,17 +10,14 @@ import Header from './Header';
 import Spinner from './Carousel';
 import Popup from './Popup';
 import './App.css';
-import { useSearchParams } from 'react-router-dom';
+// import { useSearchParams } from 'next/navigation';
 // import {Link} from 'next/link';
 import  {useState, useEffect} from "react";
 
 const Body =  ({loggedIn, setLoggedIn})=>{
-    const [searchParams, setSearchParams] = new useSearchParams();
-
-    const selectedUser = searchParams.get("user");   //get the userID from URL instead of useState.
     const [listItems, setListItems] = useState({});
     const [listConfirmation, handleListConfirmation] = useState([]);
-    console.log(selectedUser);
+    // console.log(selectedUser);
     useEffect( ()=> {
         try{
             axios.get("http://localhost:8080/items")
@@ -35,7 +32,6 @@ const Body =  ({loggedIn, setLoggedIn})=>{
     }, []);
     return(
         <>
-            <Header></Header>
             <Spinner></Spinner>
             <Container className = "mt-3">
                 <ItemRows  listItems = {listItems} listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation}></ItemRows>
@@ -72,49 +68,56 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
 
     const addToCart = (name, price)=>{
         console.log("Adding to cart");
-        if(name == null || price == null ){
-            alert("Can not define this item. Please try again");
+
+        if(localStorage.email == null){
+            alert("please login first to buy items");
         }
         else{
-            // if(user.name == "default"){
-            //     alert("Please log in first");
-
-            // }
-            var addedObject = {name: name, price: price, amount: 1};
-            var tempList = listConfirmation;
-            if(tempList.length == 0){
-                addedObject.amount = 1;
-                tempList.push(addedObject);
-                handleListConfirmation(tempList);
+            if(name == null || price == null ){
+                alert("Can not define this item. Please try again");
             }
-            else{   //if the list already have some items in there
-                var tempAmount = 0;
-                var identical = false;
-                //if there is already an existing item in there already, then change the amount in there
-                for(var i = 0; i< tempList.length; i++){  //update new amount in
-                    if(tempList[i].name == addedObject.name){
-                        console.log(tempList);
-                        identical = true;
-                        tempAmount = tempList[i].amount + 1;
-                        tempList[i].amount = tempAmount;
-                        handleListConfirmation(tempList);
-                        break;
-                    }
-                    if(identical == false && i == tempList.length - 1){   //meaning if it is already at the end and no match yet
-                        console.log("Detecting new item");
-                        addedObject.amount = 1;
-                        tempList.push(addedObject);
-                        handleListConfirmation(tempList);
-                        break;
-                    }
-                    
+            else{
+                // if(user.name == "default"){
+                //     alert("Please log in first");
+    
+                // }
+                var addedObject = {name: name, price: price, amount: 1};
+                var tempList = listConfirmation;
+                if(tempList.length == 0){
+                    addedObject.amount = 1;
+                    tempList.push(addedObject);
+                    handleListConfirmation(tempList);
                 }
+                else{   //if the list already have some items in there
+                    var tempAmount = 0;
+                    var identical = false;
+                    //if there is already an existing item in there already, then change the amount in there
+                    for(var i = 0; i< tempList.length; i++){  //update new amount in
+                        if(tempList[i].name == addedObject.name){
+                            console.log(tempList);
+                            identical = true;
+                            tempAmount = tempList[i].amount + 1;
+                            tempList[i].amount = tempAmount;
+                            handleListConfirmation(tempList);
+                            break;
+                        }
+                        if(identical == false && i == tempList.length - 1){   //meaning if it is already at the end and no match yet
+                            console.log("Detecting new item");
+                            addedObject.amount = 1;
+                            tempList.push(addedObject);
+                            handleListConfirmation(tempList);
+                            break;
+                        }
+                        
+                    }
+                }
+                console.log(tempList);
+                alert("Added to cart");
             }
-            console.log(tempList);
-            alert("Added to cart");
+            
+        }
         }
         
-    }
 
     useEffect(()=>{
         console.log(listConfirmation);
