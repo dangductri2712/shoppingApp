@@ -23,7 +23,7 @@ function Main({user,changeUser, setLoggedIn, loggedIn}){
     <BrowserRouter>
       <Routes>
         <Route path = "/" element = {<Home/>}></Route>
-        <Route path = "/items/:uid" element = {<Body user = {user} />}></Route>
+        <Route path = "/items" element = {<Body user = {user} />}></Route>
         <Route path = "/signup" element = {<Signup user = {user} changeUser = {changeUser}/>}></Route>
         <Route path = "/login" element = {<Profile user = {user} changeUser = {changeUser} loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}/> }></Route>
         <Route path = "/profile" element = {<UserProfile user = {user} loggedIn = {loggedIn} setLoggedIn = {setLoggedIn} changeUser = {changeUser}/> }></Route>

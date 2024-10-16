@@ -77,7 +77,7 @@ function Home() {
          Log in to buy and sell items
           </Card.Text>
           <Button variant="primary" onClick = {()=>{
-            window.location.assign('/items')   // not done yet
+            window.location.assign('/login')   // not done yet
           }}>Log in</Button>
         </Card.Body>
       </Card>

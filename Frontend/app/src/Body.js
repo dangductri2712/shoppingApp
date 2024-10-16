@@ -10,8 +10,19 @@ import Header from './Header';
 import Spinner from './Carousel';
 import Popup from './Popup';
 import './App.css';
-// import { useSearchParams } from 'next/navigation';
-// import {Link} from 'next/link';
+
+
+/*    ************
+ItemRows: responsible for the return of the items card. 
+    Params: 
+        listConfirmation: a useState that contains the format: 
+            [{name: "...", price: "...", amount: "...", ....}]
+        listItems: all of the available items that are on sale. Get from mongodb
+        handleListConfirmation: set the listConfirmation
+
+ItemCard: responsible for the return of one singular card.
+      ************
+*/
 import  {useState, useEffect} from "react";
 
 const Body =  ({loggedIn, setLoggedIn})=>{
@@ -47,14 +58,15 @@ const ItemRows = ({listItems, listConfirmation, handleListConfirmation})=> {
     console.log(listItems);
     return (
         <>
-            {listItems.length > 0 ?  <Row>
-            {
-            listItems.map(item=> {
-                return(
-                    <ItemCard  item = {item} listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation}></ItemCard>
-                )
-            })
-        }
+            {listItems.length > 0 ?  
+            <Row>
+                {
+                    listItems.map(item=> {
+                        return(
+                            <ItemCard  item = {item} listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation}></ItemCard>
+                        )
+                    })
+                }
         </Row> : <p>Issue catching list of items</p>}
         </>
         
@@ -64,8 +76,14 @@ const ItemRows = ({listItems, listConfirmation, handleListConfirmation})=> {
 const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
     console.log(item.imageURI);
     const [show, handleShow] = useState(false);
-    // const [list, handleList] = useState([]);
 
+    /*    
+    name: addToCart
+    usage: set the useState listConfirmation to constantly update the amount of added item.
+    params:
+        name: used to compare with the listItems. If matched, then increase the amount up
+        price: used to add into the listConfirmation 
+    */
     const addToCart = (name, price)=>{
         console.log("Adding to cart");
 
@@ -77,10 +95,6 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
                 alert("Can not define this item. Please try again");
             }
             else{
-                // if(user.name == "default"){
-                //     alert("Please log in first");
-    
-                // }
                 var addedObject = {name: name, price: price, amount: 1};
                 var tempList = listConfirmation;
                 if(tempList.length == 0){
@@ -118,10 +132,14 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
         }
         }
         
-
     useEffect(()=>{
         console.log(listConfirmation);
     }, [listConfirmation])
+
+    /*
+    handleShow/handleClose: to close/show the popup of the add to cart popup. 
+    */
+
     const handleClose = ()=>{
         handleShow(false);
     }
@@ -133,30 +151,69 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
     return(
         <Col lg = {4}>
             <Card style={{ width: '18rem' }} className = "mt-3">
-      <Card.Img variant="top" src= {item.imageURI} alt = "No image " />
-      
-       
-      <Card.Body>
+        <Card.Img variant="top" src= {item.imageURI} alt = "No image " />
+
+        <Card.Body>
         <Card.Title>{item.name}</Card.Title>
         <Card.Text>
-          {item.description}
+            {item.description}
         </Card.Text>
         <Card.Text>
-          {item.price}
+            {item.price}
         </Card.Text>
-        
-        {/* <Button variant="primary" onClick = {()=> submitFunction(item.name, item.price)}>Go somewhere</Button> */}
-      </Card.Body>
+        </Card.Body>
     </Card>
         <Popup show = {show} handleClose = {handleClose} handleShow = {handleShow} name = {item.name} price = {item.price} addToCart = {addToCart}></Popup>
         </Col>
-           
-        
     )
 }
 
 const List = ({listConfirmation, handleListConfirmation})=>{
     const [show, handleShow] = useState(false);
+    var tempList = [];
+
+    // useEffect(()=>{
+    //     console.log("List of added items changed");
+    //     tempList = listConfirmation;
+    //     console.log(tempList);
+    // }, [listConfirmation])
+    const deleteItems = (name, amount)=>{
+        tempList = listConfirmation;
+        console.log("tempList before deletion: "+ tempList);
+        /*  Objective: 
+            If the item has more than one, then adjust the amount down and the price should automatically go down as well
+            If the item does not have more than one, then just remove the item in the listConfirmation
+        */
+       var temp = [];
+       console.log("Deleting items");
+       console.log("tempList: "+ tempList);
+        if(amount >= 1){
+            for(var i =0; i< tempList.length; i++){
+                if(tempList[i].name == name){
+                    tempList[i].amount -= 1;
+                    console.log(tempList[i].name + " has the amount : "+ tempList[i].amount);
+                    if(tempList[i].amount == 0){
+                        tempList.splice(i, 1);
+                    }
+                    break;
+                }
+                
+            }
+            console.log(tempList);
+        handleListConfirmation(f=>{
+            tempList.map(item=>{
+                temp.push(item);
+            })
+            return temp;
+        });   
+        console.log("temp is:"+temp );
+        }
+
+        else{
+            console.log("Items can not be deleted if it is zero")
+        }
+        
+    }
     const handleClose = ()=>{
         handleShow(false);
     }
@@ -172,32 +229,80 @@ const List = ({listConfirmation, handleListConfirmation})=>{
             <Modal.Title>Confirmation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+                {/* <AddedItemsTable listConfirmation={listConfirmation} deleteItems={deleteItems}></AddedItemsTable> */}
                 <table className = "confirmation-table">
-                    <th>Name</th>
-                    <th className = "priceColumn">Price</th>
-                    {
-                        listConfirmation.map(item=>{
-                            return(
-                                <tr>
-                                    <td>{item.name} (x{item.amount})</td>
-                                    <td className = "priceColumn">{parseInt(item.price)* parseInt(item.amount)}</td>
-                                </tr>
-                                
-                            )
-                        })
+        <th>Name</th>
+        <th className = "priceColumn">Price</th>
+        {
+            listConfirmation.map((item, index)=>{
+                return(
+                    <>
+                        {
+                        item.amount > 0 ?
+                        <tr key = {item}>
+                            <td>{item.name} (x{item.amount})</td>
+                            <td className = "priceColumn">{parseInt(item.price)* parseInt(item.amount)}</td>
+                            <td>
+                                <svg  onClick = {()=>{
+                                    deleteItems(item.name, item.amount)
+                                }}xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+</svg>
+                            </td>
+                        </tr>
+                    :
+                    <p></p>
                     }
-                </table>
+                    </>
+                )
+            })
+        }
+    </table>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            {/* <Button variant="primary" onClick={()=> addToCart(name, price)}>
-              Add to cart.
-            </Button> */}
           </Modal.Footer>
         </Modal>
         </>
+    )
+}
+
+
+const AddedItemsTable = ({listConfirmation, deleteItems})=>{
+    
+    return(
+        <table className = "confirmation-table">
+        <th>Name</th>
+        <th className = "priceColumn">Price</th>
+        {
+            listConfirmation.map(item=>{
+                return(
+                    <>
+                        {
+                        item.amount > 0 ?
+                        <tr>
+                            <td>{item.name} (x{item.amount})</td>
+                            <td className = "priceColumn">{parseInt(item.price)* parseInt(item.amount)}</td>
+                            <td>
+                                <svg  onClick = {()=>{
+                                    deleteItems(item.name, item.amount)
+                                }}xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+</svg>
+                            </td>
+                        </tr>
+                    :
+                    <p></p>
+                    }
+                    </>
+                )
+            })
+        }
+    </table>
     )
 }
 export default Body;

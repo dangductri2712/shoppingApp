@@ -32,7 +32,7 @@ function Header({user, loggedIn, setLoggedIn}) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto text-white ">
             <Nav.Link className = "navigation-links" href="/">Home</Nav.Link>
-            <Nav.Link className = "navigation-links"href="/items/:uid=0">Items</Nav.Link>
+            <Nav.Link className = "navigation-links"href="/items">Items</Nav.Link>
             <NavDropdown  className = "navigation-links"title="More" id="basic-nav-dropdown">
               <NavDropdown.Item  href="#action/3.1">Sell items</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
