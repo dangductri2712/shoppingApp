@@ -29,6 +29,22 @@ exports.getSpecificUser = async (req, res)=>{
     }
 }
 
+exports.getSellerInfo = async (req, res)=>{
+    console.log("get specific seller ");
+    console.log(req.params.uid);
+    try{
+        const user = await items.collection("users").findOne({userID: parseInt(req.params.uid)});
+    console.log(user);
+    res.status(200).send({seller: user});
+    }
+    catch(err){
+        console.log("Error at getSpecificUser: "+ err);
+        res.status(500).send(err);
+    }
+}
+
+
+
 
 exports.insertUser = async (req,res)=>{
     console.log("insert user");

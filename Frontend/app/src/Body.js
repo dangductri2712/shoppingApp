@@ -48,7 +48,7 @@ const Body =  ({loggedIn, setLoggedIn})=>{
                 <ItemRows  listItems = {listItems} listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation}></ItemRows>
             </Container>
 
-            <List listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation}></List>
+            <List listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation} ></List>
         </>
     )
 }
@@ -95,7 +95,7 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
                 alert("Can not define this item. Please try again");
             }
             else{
-                var addedObject = {name: name, price: price, amount: 1};
+                var addedObject = {name: name, price: price, amount: 1, seller: item.seller};
                 var tempList = listConfirmation;
                 if(tempList.length == 0){
                     addedObject.amount = 1;
@@ -163,7 +163,7 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
         </Card.Text>
         </Card.Body>
     </Card>
-        <Popup show = {show} handleClose = {handleClose} handleShow = {handleShow} name = {item.name} price = {item.price} addToCart = {addToCart}></Popup>
+        <Popup show = {show} handleClose = {handleClose} handleShow = {handleShow} name = {item.name} price = {item.price} seller = {item.seller} addToCart = {addToCart}></Popup>
         </Col>
     )
 }
@@ -214,6 +214,26 @@ const List = ({listConfirmation, handleListConfirmation})=>{
         }
         
     }
+
+    const handleConfirmPurchase = ()=>{
+        const historyPostBody = [];
+        for(var i=0; i< listConfirmation.length; i++){
+            historyPostBody.push({
+                itemName: listConfirmation[i].name,
+                price: listConfirmation[i].price,
+                seller: listConfirmation[i].seller,
+                buyer: localStorage.email
+            })
+        }
+        axios.post("http://localhost:8080/users/history/"+ localStorage.uid, historyPostBody)
+        .then((result)=>{
+            alert("Purchase completed");
+        })
+        .catch(err=>{
+            alert("Something is wrong. Please reload and try again")
+        })
+    }
+
     const handleClose = ()=>{
         handleShow(false);
     }
@@ -264,6 +284,9 @@ const List = ({listConfirmation, handleListConfirmation})=>{
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
+            <Button variant="secondary" onClick={handleConfirmPurchase}>
+              Confirm
+            </Button>
           </Modal.Footer>
         </Modal>
         </>
@@ -296,7 +319,11 @@ const AddedItemsTable = ({listConfirmation, deleteItems})=>{
                             </td>
                         </tr>
                     :
-                    <p></p>
+                    <tr>
+                        <td>
+                            Currently nothing yet
+                        </td>
+                    </tr>
                     }
                     </>
                 )

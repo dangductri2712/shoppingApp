@@ -32,12 +32,20 @@ router.route('/user/:email').get((req,res)=>{
     Users.getSpecificUser(req,res);
 })
 
+//get seller info
+router.route('/user/seller/:uid').get((req,res)=>{
+    Users.getSellerInfo(req,res);
+})
+
 router.route('/users/login').post((req,res)=>{
     Users.checkForLogin(req,res);
 })
 
-router.route('/users/history/:uid').get((req,res)=>{
+router.route('/user/history/:email').get((req,res)=>{
     History.viewHistory(req,res);
+})
+.post((req,res)=>{
+    History.insertHistory(req,res);
 })
 
 router.route('/users/:uid').put((req,res)=>{
@@ -46,5 +54,8 @@ router.route('/users/:uid').put((req,res)=>{
 .get((req,res)=>{
     Users.checkLoginStatus(req,res);
 })
+
+
+
 
 module.exports = router;

@@ -48,7 +48,7 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
               alert("Authentication correct");
               setLoggedIn(true);
               changeUser(result.data.user);
-              // window.location.assign("/profile");
+              window.location.assign("/profile");
           })
           .catch(err=>{
               alert("Something is wrong. Please check again");

@@ -1,5 +1,6 @@
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
 import Header from './Header';
 import axios from 'axios';
 
@@ -10,6 +11,7 @@ const UserProfile = ()=>{
 
     const getUserInfo = async ()=>{
         const tempUser = await findUserInfo(localStorage.email);
+        console.log("tempUser: "+ tempUser.email);
         setSelectedUser(tempUser);
     }
     useEffect(()=>{
@@ -41,7 +43,7 @@ const ItemHistory = ({user})=>{
     const [history, setHistory] = useState({});
 
     useEffect(()=>{
-        axios.get("http://localhost:8080/users/history/:uid="+ user.uid)
+        axios.get("http://localhost:8080/user/history/"+ localStorage.email)
         .then(res=>{
             console.log("Here is the history");
             console.log(res.data);
@@ -54,18 +56,31 @@ const ItemHistory = ({user})=>{
             <h1>Item history</h1>
             {
                 history.length > 0?
-                <ul>
+                <Row>
             {
                 history.map(item=>{
                     return(
-                        <>
-                            <li>{item.name}</li>
-                            <li>{item.seller}</li>
-                        </>
+                        // <>
+                        //     <li>{item.itemName}</li>
+                        //     <li>{item.price}</li>
+                        //     <li>{item.seller}</li>
+                        // </>
+                        <Card style={{ width: '18rem' }} className = "mt-3">
+
+                            <Card.Body>
+                            <Card.Title>Name: {item.itemName}</Card.Title>
+                            <Card.Text>
+                                Price: {item.price}
+                            </Card.Text>
+                            <Card.Text>
+                                Seller: {item.seller}
+                            </Card.Text>
+                            </Card.Body>
+                        </Card>
                     )
                 })
             }
-                </ul>
+                </Row>
                 :
                 <p>Nothing in your history yet</p>
             }
