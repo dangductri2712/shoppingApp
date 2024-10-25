@@ -3,7 +3,7 @@ import Home from './Home';
 import Body from './Body';
 import Signup from './Signup';
 import Profile from './Profile';
-import UserProfile from './UserProfile';
+import UserProfile from './profile/UserProfile';
 const {useState, useEffect} = require('react');
 function Main({user,changeUser, setLoggedIn, loggedIn}){
   var data = {};

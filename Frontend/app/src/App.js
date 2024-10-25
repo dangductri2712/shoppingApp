@@ -24,14 +24,6 @@ function App(){
 
   
   return(
-    // <BrowserRouter>
-    //   <Routes>
-    //     <Route path = "/" element = {<Home loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}/>}></Route>
-    //     <Route path = "/items/:uid" element = {<Body user = {user} loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}/>}></Route>
-    //     <Route path = "/signup" element = {<Signup loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}/>}></Route>
-        
-    //   </Routes>
-    // </BrowserRouter>
     <>
       <Header user = {user} loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}></Header>
       <Main user = {user} changeUser = {changeUser} loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}></Main>

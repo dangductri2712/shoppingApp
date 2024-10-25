@@ -1,0 +1,32 @@
+:root{
+    --neon-green: #28D095;
+    --even-background-color: black;
+    --hover-color: #CF6C2F;
+  }
+
+
+
+.historyInfo{
+    color: var(--neon-green);
+    
+}
+
+.historyTile{
+    border-radius: 25px;
+    border-style: solid;
+    max-width: 70%;
+    background-color: black;
+   
+}
+
+.historyImage{
+    max-width: 100%;
+    object-fit: cover;       
+}
+
+/* @media only screen and (max-width: 1590px){
+    .historyImage{
+        width: 34vw;
+        object-fit: cover;       
+    }
+} */

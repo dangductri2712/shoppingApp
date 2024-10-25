@@ -16,12 +16,34 @@ exports.listAllUsers = async (req,res)=>{
 }
 
 
-exports.getSpecificUser = async (req, res)=>{
-    console.log("get specific user based on email");
+exports.getSpecificUserByEmail = async (req, res)=>{
+    console.log("get specific user. Should only be used as the login feature");
     try{
+        console.log(req.params.email);
         const user = await items.collection("users").findOne({email: req.params.email});
-    console.log(user);
-    res.status(200).send(user);
+        console.log(user);
+        res.status(200).send(user);
+    }
+    catch(err){
+        console.log("Error at getSpecificUser: "+ err);
+        res.status(500).send(err);
+    }
+}
+
+
+exports.getSpecificUser = async (req, res)=>{
+    console.log("get specific user by uid");
+    try{
+        console.log(req.params.uid);
+        const user = await items.collection("users").findOne({userID: Number(req.params.uid)});
+        console.log(user);
+        if(user == null){
+            throw Error("Can not find the user with this uid");
+        }
+        else{
+            res.status(200).send(user);
+        }
+        
     }
     catch(err){
         console.log("Error at getSpecificUser: "+ err);
@@ -48,7 +70,7 @@ exports.getSellerInfo = async (req, res)=>{
 
 exports.insertUser = async (req,res)=>{
     console.log("insert user");
-   
+    
     try{
         
         const saltRounds = 10;
@@ -200,4 +222,31 @@ exports.checkLoginStatus = async (req,res)=>{
         res.status(500).send("Invalid request to check for login. Please check your uid");
     }
     
+}
+
+
+exports.updateUser = async (req,res)=>{
+    console.log("updating user");
+    const option = {upsert: true};
+    const filter = {uid: req.body.uid};
+    try{
+        const previousUserInfo = await items.collection("users").findOne({userID: Number(req.params.uid)});
+        const putBody = {
+            name: req.body.name? req.body.name: previousUserInfo.name,
+            password: req.body.password? bcript.hash(req.body.password, 10) : previousUserInfo.password,
+            email: req.body.email? req.body.email: previousUserInfo.email
+        }
+        const updteDoc = {
+            $set: putBody
+        }
+
+        await items.collection("users").updateOne(filter, updateDoc, option);
+        const currentUserInfo = await items.collection("users").findOne({userID: req.params.uid});
+        res.status(200).send(currentUserInfo);
+        
+    }
+    catch(err){
+        console.log("Error at updating user: "+ err);
+        res.status(505).send(err);
+    }
 }

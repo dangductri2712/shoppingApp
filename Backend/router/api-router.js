@@ -28,8 +28,15 @@ router.route('/users/signup').get((req,res)=>{
 })
 
 //get specific users based on email
-router.route('/user/:email').get((req,res)=>{
+router.route('/user/email/:email').get((req,res)=>{
+    Users.getSpecificUserByEmail(req,res);
+})
+
+router.route('/user/:uid').get((req,res)=>{
     Users.getSpecificUser(req,res);
+})
+.put((req,res)=>{
+    Users.updateUser(req,res);
 })
 
 //get seller info

@@ -3,7 +3,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Header from './Header';
-import UserProfile from './UserProfile';
+import UserProfile from './profile/UserProfile';
 import './Signup.css';
 const {useState, useEffect} = require("react");
 
@@ -11,7 +11,19 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-
+  const [uid, setUID] = useState("");
+  const getUserInfo = async (email)=>{
+      if(email != ""){
+        await axios.get("http://localhost:8080/user/email/"+ email)
+      .then(res=>{
+          setUID(res.data.userID);
+      })
+      }
+      else{
+        alert("email is empty in Login.js");
+      }
+      
+  }
   const handleNameChange = (event)=>{
       setName(event.target.value);
   }
@@ -32,6 +44,8 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
     postBody.email = email;
     postBody.password = password;
     postBody.name = name;
+    getUserInfo(postBody.email);
+
 }, [name, password, email])
   return(
       <>
@@ -57,7 +71,7 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
 
           //store user and password on client's browser
 
-          localStorage.setItem("email", `${postBody.email}`);
+          localStorage.setItem("userInfo", JSON.stringify({email: email, uid: uid}));
           }
           else{
             alert("The information can not be empty");

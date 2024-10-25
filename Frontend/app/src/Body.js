@@ -21,6 +21,9 @@ ItemRows: responsible for the return of the items card.
         handleListConfirmation: set the listConfirmation
 
 ItemCard: responsible for the return of one singular card.
+
+
+List: responsible for providing all the added items that will be transfered to <Popup>
       ************
 */
 import  {useState, useEffect} from "react";
@@ -28,7 +31,6 @@ import  {useState, useEffect} from "react";
 const Body =  ({loggedIn, setLoggedIn})=>{
     const [listItems, setListItems] = useState({});
     const [listConfirmation, handleListConfirmation] = useState([]);
-    // console.log(selectedUser);
     useEffect( ()=> {
         try{
             axios.get("http://localhost:8080/items")
@@ -84,18 +86,18 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
         name: used to compare with the listItems. If matched, then increase the amount up
         price: used to add into the listConfirmation 
     */
-    const addToCart = (name, price)=>{
+    const addToCart = (addedItem)=>{
         console.log("Adding to cart");
 
         if(localStorage.email == null){
             alert("please login first to buy items");
         }
         else{
-            if(name == null || price == null ){
+            if(item.name == null || item.price == null ){
                 alert("Can not define this item. Please try again");
             }
             else{
-                var addedObject = {name: name, price: price, amount: 1, seller: item.seller};
+                var addedObject = {name: addedItem.name, price: addedItem.price, amount: 1, seller: addedItem.seller, imageURI: addedItem.imageURI};
                 var tempList = listConfirmation;
                 if(tempList.length == 0){
                     addedObject.amount = 1;
@@ -163,7 +165,7 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
         </Card.Text>
         </Card.Body>
     </Card>
-        <Popup show = {show} handleClose = {handleClose} handleShow = {handleShow} name = {item.name} price = {item.price} seller = {item.seller} addToCart = {addToCart}></Popup>
+        <Popup show = {show} handleClose = {handleClose} handleShow = {handleShow} item = {item} addToCart = {addToCart}></Popup>
         </Col>
     )
 }
@@ -171,12 +173,6 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
 const List = ({listConfirmation, handleListConfirmation})=>{
     const [show, handleShow] = useState(false);
     var tempList = [];
-
-    // useEffect(()=>{
-    //     console.log("List of added items changed");
-    //     tempList = listConfirmation;
-    //     console.log(tempList);
-    // }, [listConfirmation])
     const deleteItems = (name, amount)=>{
         tempList = listConfirmation;
         console.log("tempList before deletion: "+ tempList);
@@ -215,21 +211,23 @@ const List = ({listConfirmation, handleListConfirmation})=>{
         
     }
 
-    const handleConfirmPurchase = ()=>{
+    const handleConfirmPurchase = async ()=>{
         const historyPostBody = [];
         for(var i=0; i< listConfirmation.length; i++){
             historyPostBody.push({
                 itemName: listConfirmation[i].name,
                 price: listConfirmation[i].price,
                 seller: listConfirmation[i].seller,
-                buyer: localStorage.email
+                buyer: localStorage.email,
+                imageURI: listConfirmation.imageURI
             })
         }
-        axios.post("http://localhost:8080/users/history/"+ localStorage.uid, historyPostBody)
+        await axios.post("http://localhost:8080/user/history/"+ localStorage.email, historyPostBody)
         .then((result)=>{
             alert("Purchase completed");
         })
         .catch(err=>{
+            console.log("Error at storing history: "+err);
             alert("Something is wrong. Please reload and try again")
         })
     }
@@ -284,7 +282,10 @@ const List = ({listConfirmation, handleListConfirmation})=>{
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button variant="secondary" onClick={handleConfirmPurchase}>
+            <Button variant="secondary" onClick={()=>{
+                handleConfirmPurchase()}
+            }
+            >
               Confirm
             </Button>
           </Modal.Footer>

@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import {useState, useEffect} from 'react';
 
-const Popup = ({handleShow, handleClose, show, name, price, addToCart, seller})=>{
+const Popup = ({handleShow, handleClose, show, item,addToCart})=>{
   const [selectedSeller, setSeller] = useState("seller");
   useEffect(()=>{
     getSeller();
@@ -11,7 +11,7 @@ const Popup = ({handleShow, handleClose, show, name, price, addToCart, seller})=
 
   async function getSeller(){
     var tempSeller = {};
-    await axios.get("http://localhost:8080/user/seller/"+seller)
+    await axios.get("http://localhost:8080/user/seller/"+item.seller)
     .then(res=>{
       console.log(res.data[0]);
       tempSeller = res.data.seller;
@@ -32,14 +32,14 @@ const Popup = ({handleShow, handleClose, show, name, price, addToCart, seller})=
           <Modal.Header closeButton>
             <Modal.Title>Confirmation</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Name: {name}</Modal.Body>
-          <Modal.Body>Price: {price}</Modal.Body>
+          <Modal.Body>Name: {item.name}</Modal.Body>
+          <Modal.Body>Price: {item.price}</Modal.Body>
           <Modal.Body>Seller: {selectedSeller.name}</Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={()=> addToCart(name, price)}>
+            <Button variant="primary" onClick={()=> addToCart(item)}>
               Add to cart.
             </Button>
           </Modal.Footer>

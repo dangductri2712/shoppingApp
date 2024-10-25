@@ -17,7 +17,7 @@ function Home() {
   return (
     <>
       <div>
-      <div id = "background_start" style = {{zIndex: "-999", backgroundColor: "#28D095", width: "100vw", height: "100vh", position: "absolute", top: "0px"}}>
+      <div id = "background_start" style = {{zIndex: "-999", backgroundColor: "#FFFFFF", width: "100vw", height: "100vh", position: "absolute", top: "0px"}}>
 
       </div>
       <Row>
@@ -56,32 +56,37 @@ function Home() {
         <Col lg = {4}>
           <Card style={{ width: '18rem' , marginTop: "50px"}}>
           <Card.Img variant="top" src= "http://localhost:8080/account.jpg" alt = "No image " />
-        <Card.Body>
-          <Card.Title>Explore items</Card.Title>
-          <Card.Text>
-          Click here to see items that other customers put on sale
-          </Card.Text>
-          <Button variant="primary" onClick = {()=>{
-            window.location.assign('/items')
-          }}>View items</Button>
-        </Card.Body>
+          <Card.Body>
+            <Card.Title>Explore items</Card.Title>
+            <Card.Text>
+            Click here to see items that other customers put on sale
+            </Card.Text>
+            <Button variant="primary" onClick = {()=>{
+              window.location.assign('/items')
+            }}>View items</Button>
+          </Card.Body>
       </Card>
         </Col>
 
+      {
+        localStorage.email == null?
         <Col lg = {4}>
-          <Card style={{ width: '18rem' , marginTop: "50px"}}>
-          <Card.Img variant="top" src= "http://localhost:8080/magnifying-glass.png" alt = "No image " />
-        <Card.Body>
-          <Card.Title>Log in</Card.Title>
-          <Card.Text>
-         Log in to buy and sell items
-          </Card.Text>
-          <Button variant="primary" onClick = {()=>{
-            window.location.assign('/login')   // not done yet
-          }}>Log in</Button>
-        </Card.Body>
+        <Card style={{ width: '18rem' , marginTop: "50px"}}>
+        <Card.Img variant="top" src= "http://localhost:8080/magnifying-glass.png" alt = "No image " />
+      <Card.Body>
+        <Card.Title>Log in</Card.Title>
+        <Card.Text>
+      Log in to buy and sell items
+        </Card.Text>
+        <Button variant="primary" onClick = {()=>{
+          window.location.assign('/login')   // not done yet
+        }}>Log in</Button>
+      </Card.Body>
       </Card>
-        </Col>
+      </Col>
+      :
+        <p></p>
+      }
       </Row>
       
     </>

@@ -1,0 +1,27 @@
+:root{
+    --neon-green: #28D095;
+    --even-background-color: black;
+    --hover-color: #CF6C2F;
+  }
+
+#sideBar {
+    height:100vh;
+    background-color: black;
+}
+
+#sideBar img {
+    border-radius: 50%;
+    width: 300px;
+    height: 20vh;
+    object-fit: cover;
+}
+#profile{
+    border-style: solid;
+    object-fit: cover;
+    background-color: "#28D095";
+}
+
+
+@media only screen and (max-width: 400px){
+    
+}

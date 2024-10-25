@@ -1,9 +1,11 @@
+const axios  = require('axios');
 const db = require("../db/mongo.js");
 db.connectDb();
 const items = db.client.db("shoppingAppDB");
 
 exports.insertHistory = async (req,res)=>{
-    console.log(req.body.itemName);
+    console.log("storing history of purchase");
+    console.log(req.body);
     const historyBody = req.body
     await items.collection("history").insertMany(historyBody)
     .then(res=>{
@@ -21,8 +23,16 @@ exports.viewHistory = async(req,res)=>{
             if(err) throw err;
             console.log(result);
         });
+        var tempHistory = allHistory;
+        for(var i =0; i< allHistory.length; i++){
+            await axios.get("http://localhost:8080/user/seller/"+ tempHistory[i].seller)
+            .then(response=>{
+                console.log(response.data.seller);
+                tempHistory[i].seller = response.data.seller.name;
+            })
+        }
         console.log("allHistory: "+allHistory);
-        res.status(200).send(allHistory);
+        res.status(200).send(tempHistory);
     }
     catch(err){
         console.log(err);
