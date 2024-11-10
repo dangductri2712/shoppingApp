@@ -10,7 +10,7 @@ const ItemHistory = ()=>{
     const [history, setHistory] = useState([{itemName: "unknown", price: "unknown", seller: "unknown"}]);
     const getHistory = async()=>{
         console.log(JSON.parse(localStorage.userInfo).email);
-        await axios.get("http://localhost:8080/user/history/"+ JSON.parse(localStorage.userInfo).email)
+        await axios.get("http://localhost:8080/user/history/"+ JSON.parse(localStorage.userInfo).uid.toString())
         .then(async res=>{
             console.log("Here is the history");
             console.log(res.data);
@@ -19,9 +19,6 @@ const ItemHistory = ()=>{
         .catch(err=>{
             console.log(err);
         })
-
-
-        
     }
     useEffect(()=>{
         getHistory();
@@ -34,6 +31,7 @@ const ItemHistory = ()=>{
             <Row id = "historyContainer" className = "">
                 {
                 history.map(item=>{
+                    console.log(item);
                     return(
                     <Col sm = {4}>
                         <Card style={{ width: '18rem' }} className = "mt-3">
@@ -54,6 +52,9 @@ const ItemHistory = ()=>{
                                 </Card.Text>
                                 <Card.Text>
                                     Seller: {item.seller}
+                                </Card.Text>
+                                <Card.Text>
+                                    Bought on: {item.buyDate}
                                 </Card.Text>
                             </Card.Body>
                         </Card>

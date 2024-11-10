@@ -2,6 +2,8 @@ const express  = require("express");
 const app = express();
 const cors = require("cors");
 const path = require('path');
+const multer = require("multer");
+
 var corsOptions = {
     origin: "http://localhost:3000"
 }
@@ -17,12 +19,21 @@ const routes = require('./router/api-router.js');
 app.use('/', routes);
 app.use(express.static('./images'))
 const PORT = 8080;
-// app.get("/", (req,res)=> {
-//     console.log("Welcome to Danny's shopping app");
-// })
+const storage = multer.diskStorage({
+    destination: function(req,file, callback){
+        callback(null, "./images");
+    },
+    filename: function(req,file, callback){
+        callback(null, file.originalname);
+    }
+})
+const upload = multer({storage: storage});
+app.post('/upload', upload.single('uploadFile'), (req,res)=>{
+    console.log("Uploading file");
+    console.log(req.file);
+    res.status(201).send("Successfully upload file"); 
 
-// connectDb();   //connecting with the mongoDB
-
+})
 app.listen(PORT, (err)=> {
     if(err){
         console.log("Error with listening in backend");

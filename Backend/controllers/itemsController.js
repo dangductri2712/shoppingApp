@@ -32,7 +32,9 @@ exports.insertItem = async (req,res)=> {
         description: req.body.description != null? req.body.description : "unknown",
         price: req.body.price != null? req.body.price : "unknown",
         itemID: newID.toString(),
-        imageURI: req.body.imageURI != null ? req.body.imageURI : "http://localhost:8080/unknown.jpg"
+        imageURI: req.body.imageURI != null ? req.body.imageURI : "http://localhost:8080/unknown.jpg",
+        itemLocation: req.body.location,
+        seller: req.body.seller != null? req.body.seller : "0"
     }
     await items.collection("shoppingItems").insertOne(insertBody);
     res.status(201).send("Successfully insert "+ insertBody.name);

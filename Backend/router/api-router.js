@@ -4,6 +4,7 @@ const app = express();
 const Items = require("../controllers/itemsController");
 const Users = require("../controllers/usersController");
 const History = require("../controllers/historyController");
+const Files = require("../controllers/filesController");
 const router = express.Router();
 
 
@@ -27,7 +28,7 @@ router.route('/users/signup').get((req,res)=>{
     Users.insertUser(req,res);
 })
 
-//get specific users based on email
+//get specific users based on email. This is called when user login.
 router.route('/user/email/:email').get((req,res)=>{
     Users.getSpecificUserByEmail(req,res);
 })
@@ -44,25 +45,28 @@ router.route('/user/seller/:uid').get((req,res)=>{
     Users.getSellerInfo(req,res);
 })
 
-router.route('/users/login').post((req,res)=>{
-    Users.checkForLogin(req,res);
-})
+// router.route('/users/login').post((req,res)=>{
+//     Users.checkForLogin(req,res);
+// })
 
-router.route('/user/history/:email').get((req,res)=>{
+router.route('/user/history/:uid').get((req,res)=>{
     History.viewHistory(req,res);
 })
-.post((req,res)=>{
+
+router.route('/user/history').post((req,res)=>{
     History.insertHistory(req,res);
 })
 
-router.route('/users/:uid').put((req,res)=>{
-    Users.userLogIn(req,res);
-})
-.get((req,res)=>{
-    Users.checkLoginStatus(req,res);
-})
+// router.route('/users/:uid').put((req,res)=>{
+//     Users.userLogIn(req,res);
+// })
+// .get((req,res)=>{
+//     Users.checkLoginStatus(req,res);
+// })
 
-
+// router.route('/upload').post((req,res)=>{
+//     Files.uploadFile(req,res);
+// })
 
 
 module.exports = router;

@@ -5,30 +5,39 @@ import Button from 'react-bootstrap/Button';
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import './Profile.css';
-const ProfilePage = ({setPage})=>{
+const ProfilePage = ({userInfo})=>{
     const [email, setEmail] = useState('unknown.email.com');
     const [name, setName] = useState('unknown');
     const [password, setPassword] = useState('unknown');
-    const handleSubmit = async ()=>{
-        const putBody = {
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        alert("Starting to edit the user info");
+        var userId = userInfo.uid;
+        // setUserId(JSON.parse(localStorage.userInfo).uid);
+        const putComponent = {
             name: name,
             email: email, 
             password: password
         }
-        await axios.put('http://localhost:8080/user/'+ JSON.parse(localStorage.userInfo).uid, putBody)
+
+        await axios.put(`http://localhost:8080/user/${userId.toString()}`, putComponent)
         .then(res=>{
-            console.log(res.data);
             alert("Successfully edited");
+            console.log(res.data)
+            //update the local storage with new email
+            localStorage.clear();
+            localStorage.setItem("userInfo", JSON.stringify({email: email, uid: userId}));
+
         })
         .catch(err=>{
-            console.log("Error with editing user profile; info: "+ err);
+            console.log("Error with editing user profile info: "+ err);
             alert("Error with editing user profile info");
         })
     }
     return(
-
-        <Card style={{ width: '18rem' }} className = "mt-3">
-        <Card.Img variant="top" src= "http://localhost:8080/unknown.jpg" alt = "No image " />
+        <form onSubmit={handleSubmit}  className = "mx-auto">
+            <Card style={{ width: '18rem' }} className = "mt-3">
+        <Card.Img variant="top" src= "http://localhost:8080/account.jpg" alt = "No image " />
         <Card.Body>
         <Card.Title>Edit profile</Card.Title>
         <Card.Text>
@@ -37,25 +46,23 @@ const ProfilePage = ({setPage})=>{
             <Col sm = "12">
                 <h5>Email</h5>
                 <label className = "mb-3">
-                    <input type = "text" onChange = {setEmail} ></input>
+                    <input type = "text" value = {email} onChange = {e=> setEmail(e.target.value)} ></input>
                 </label>
             </Col>
             <Col sm = "12">
                 <h5>Name</h5>
                 <label className = "mb-3">
-                    <input type = "text" onChange = {setName} ></input>
+                    <input type = "text" value = {name} onChange = {e=> setName(e.target.value)} ></input>
                 </label>
             </Col>
             <Col sm = "12">
                 <h5>New Password</h5>
                 <label className = "mb-3">
-                    <input type = "password" onChange = {setPassword} ></input>
+                    <input type = "password" value = {password}onChange = {e=> setPassword(e.target.value)} ></input>
                 </label>
             </Col>
             <label className = "mb-3">
-            <input type = "submit" onSubmit = {()=>{
-                handleSubmit();                
-            }}></input>
+            <input type = "submit"></input>
             </label>
             
         </Row>
@@ -63,6 +70,8 @@ const ProfilePage = ({setPage})=>{
         
         </Card.Body>
     </Card>
+        </form>
+        
 
         
     )

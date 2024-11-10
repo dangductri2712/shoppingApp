@@ -89,7 +89,7 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
     const addToCart = (addedItem)=>{
         console.log("Adding to cart");
 
-        if(localStorage.email == null){
+        if(JSON.parse(localStorage.userInfo).email == null){
             alert("please login first to buy items");
         }
         else{
@@ -153,7 +153,7 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
     return(
         <Col lg = {4}>
             <Card style={{ width: '18rem' }} className = "mt-3">
-        <Card.Img variant="top" src= {item.imageURI} alt = "No image " />
+        <Card.Img variant="top" src= {item.imageURI} alt = "No image " width = "286px" height = "286px" style = {{objectFit: "contain"}}/>
 
         <Card.Body>
         <Card.Title>{item.name}</Card.Title>
@@ -218,11 +218,12 @@ const List = ({listConfirmation, handleListConfirmation})=>{
                 itemName: listConfirmation[i].name,
                 price: listConfirmation[i].price,
                 seller: listConfirmation[i].seller,
-                buyer: localStorage.email,
-                imageURI: listConfirmation.imageURI
+                buyer: JSON.parse(localStorage.userInfo).uid.toString(),
+                imageURI: listConfirmation.imageURI,
+                buyDate: new Date()
             })
         }
-        await axios.post("http://localhost:8080/user/history/"+ localStorage.email, historyPostBody)
+        await axios.post("http://localhost:8080/user/history/", historyPostBody)
         .then((result)=>{
             alert("Purchase completed");
         })

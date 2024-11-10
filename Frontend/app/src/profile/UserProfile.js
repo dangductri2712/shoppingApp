@@ -5,19 +5,20 @@ import Card from 'react-bootstrap/Card';
 import Header from '../Header.js';
 import axios from 'axios';
 import ItemHistory from '../ItemHistory.js';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, createRef} from 'react';
 import {findUserInfo} from '../findUserInfo.js';
 import ProfilePage from './ProfilePage.js';
 import './Profile.css';
 const UserProfile = ()=>{
+    
     const [selectedUser, setSelectedUser] = useState({name: "default", email: "email"});
     const [historyPage,setHistoryPage] = useState(false);
     const [profilePage, setProfilePage] = useState(false);
     const [sellPage, setSellPage] = useState(false);
-
+    const userInfo = JSON.parse(localStorage.userInfo);
     const pageArray = [setHistoryPage, setProfilePage, setSellPage];
     const getUserInfo = async ()=>{
-        const userInfo = JSON.parse(localStorage.userInfo);
+        
         console.log("userInfo: "+userInfo);
         const tempUser = await findUserInfo(userInfo.uid);
         console.log("tempUser: "+ tempUser.email);
@@ -76,14 +77,14 @@ const UserProfile = ()=>{
                
                
             </Col>
-            <Col sm = {12} md = {9} >
+            <Col sm = {12} md = {9} style = {{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             {
                 historyPage? 
                 <ItemHistory></ItemHistory>
                 :
                 profilePage ?
 
-                <ProfilePage setPage = {setPage}></ProfilePage>
+                <ProfilePage userInfo = {userInfo}></ProfilePage>
                 :
                 sellPage?
                 <SellItemPage></SellItemPage>
@@ -96,8 +97,106 @@ const UserProfile = ()=>{
 }
 
 const SellItemPage = ()=>{
+    const [itemName, setItemName] = useState("");
+    const [itemPrice, setItemPrice] = useState("");
+    const [itemLocation, setItemLocation] = useState("");
+    const [itemDescription, setItemDescription] = useState("");
+    const fileInput = createRef();
+    const formData = new FormData();
+    const [file, setFile] = useState("");
+    const handleChange = (e)=>{
+        e.preventDefault();
+        console.log(e.target.value);
+        if(e.target.name == "itemName"){
+            setItemName(e.target.value);
+        }
+        else if(e.target.name == "itemPrice"){
+            setItemPrice(e.target.value);
+        }
+        else if(e.target.name == "itemDescription"){
+            setItemDescription(e.target.value);
+        }
+        else{
+            setItemLocation(e.target.value);
+        }
+    }
+
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        console.log(e.target.uploadFile.files[0]);
+        let file = e.target.uploadFile.files[0];
+        // setFile(e.target.value);
+        formData.append('uploadFile', file);
+        await axios.post("http://localhost:8080/upload", formData, {
+            headers:{
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(response=>{
+            console.log(response.data);
+        })
+        .catch(err=>{
+            alert("Error uploading files");
+        });
+
+        const newItem = {
+            name: itemName,
+            price: itemPrice,
+            location: itemLocation,
+            description: itemDescription,
+            imageURI: "http://localhost:8080/"+ e.target.uploadFile.files[0].name,
+            seller: (JSON.parse(localStorage.userInfo).uid).toString()
+        }
+
+        await axios.post("http://localhost:8080/items", newItem)
+        .then(response=>{
+            console.log(response.data);
+        }
+        )
+        .catch(err=>{
+            console.log("Error at submitting new item's info: "+err);
+            alert("Please try to submit the new item to sell again");
+        });
+    }
     return(
-        <p>This is sell item page</p>
+        <>
+            <form className = "file-upload" onSubmit = {handleSubmit} enctype = "multipart/form-data">
+                <h5>
+                    Item Name
+                </h5>
+                <label className = "mt-3">
+                    <input type = "text" name = "itemName" value = {itemName} onChange = {handleChange}></input>
+                </label>
+
+                <h5>
+                    Item Description
+                </h5>
+                <label className = "mt-3">
+                    <input type = "text" name = "itemDescription" value = {itemDescription} onChange = {handleChange}></input>
+                </label>
+                <h5>
+                    Item Price
+                </h5>
+                <label className = "mt-3">
+                    <input type = "text" name = "itemPrice" value = {itemPrice} onChange = {handleChange}></input>
+                </label>
+
+
+                <h5>
+                    Item Location
+                </h5>
+                <label className = "mt-3">
+                    <input type = "text" name = "itemLocation" value = {itemLocation} onChange = {handleChange}></input>
+                </label>
+                
+                <h5>Select the Item's image</h5>
+                <label className = "mt-3">
+                    <input type = "file" name = "uploadFile" required></input>
+                </label>
+                
+                <button type="submit">Submit</button>
+            </form>
+        </>
     )
 }
 

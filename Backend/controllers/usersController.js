@@ -228,21 +228,27 @@ exports.checkLoginStatus = async (req,res)=>{
 exports.updateUser = async (req,res)=>{
     console.log("updating user");
     const option = {upsert: true};
-    const filter = {uid: req.body.uid};
+    const filter = {userID: Number(req.params.uid)};
     try{
         const previousUserInfo = await items.collection("users").findOne({userID: Number(req.params.uid)});
+        console.log(previousUserInfo);
         const putBody = {
             name: req.body.name? req.body.name: previousUserInfo.name,
-            password: req.body.password? bcript.hash(req.body.password, 10) : previousUserInfo.password,
+            password: req.body.password? bcrypt.hash(req.body.password, 10) : previousUserInfo.password,
             email: req.body.email? req.body.email: previousUserInfo.email
         }
-        const updteDoc = {
+        const updateDoc = {
             $set: putBody
         }
-
-        await items.collection("users").updateOne(filter, updateDoc, option);
-        const currentUserInfo = await items.collection("users").findOne({userID: req.params.uid});
-        res.status(200).send(currentUserInfo);
+        try{
+            await items.collection("users").updateOne(filter, updateDoc, option);
+        }
+        catch(err){
+            console.log("Error with updating to mongodb");
+        }
+        
+        const currentUserInfo = await items.collection("users").findOne({userID: Number(req.params.uid)});
+        res.status(200).json(currentUserInfo);
         
     }
     catch(err){

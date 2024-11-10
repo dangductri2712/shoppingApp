@@ -69,7 +69,7 @@ function Home() {
         </Col>
 
       {
-        localStorage.email == null?
+        JSON.parse(localStorage.userInfo).email == null?
         <Col lg = {4}>
         <Card style={{ width: '18rem' , marginTop: "50px"}}>
         <Card.Img variant="top" src= "http://localhost:8080/magnifying-glass.png" alt = "No image " />

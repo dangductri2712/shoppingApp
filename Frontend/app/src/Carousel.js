@@ -15,20 +15,6 @@ function Spinner() {
       </div>
       </Carousel.Item>
       <Carousel.Item>
-       
-      {/* <Row>
-      <Col xl = "8" className = "align-items-center"><img 
-            className="d-block  "
-src="http://localhost:8080/carousel_2.png"
-            alt="Image One" style = {{ maxHeight: "60vh", maxWidth:"100%"}}
-          /></Col>
-      <Col xl = "4" className = "my-auto mx-auto" >
-        <div className = "image-description">
-          <h1 >Multiple options</h1>
-        </div>    
-      </Col>
-      </Row> */}
-
       <div>
         <img className="d-block carousel-image" src="http://localhost:8080/carousel_2.png" alt="Image Two" />
         <div className = "image-description mx-auto my-auto" >

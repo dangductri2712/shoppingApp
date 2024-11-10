@@ -6,7 +6,7 @@ const items = db.client.db("shoppingAppDB");
 exports.insertHistory = async (req,res)=>{
     console.log("storing history of purchase");
     console.log(req.body);
-    const historyBody = req.body
+    const historyBody = req.body;
     await items.collection("history").insertMany(historyBody)
     .then(res=>{
         console.log("Successfully save the history");
@@ -19,7 +19,7 @@ exports.insertHistory = async (req,res)=>{
 exports.viewHistory = async(req,res)=>{
     console.log("Viewing history");
     try{
-        const allHistory = await items.collection("history").find({buyer: req.params.email}).toArray(function(err,result){
+        const allHistory = await items.collection("history").find({buyer: req.params.uid}).toArray(function(err,result){
             if(err) throw err;
             console.log(result);
         });
