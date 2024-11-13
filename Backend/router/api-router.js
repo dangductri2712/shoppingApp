@@ -19,7 +19,9 @@ router.route('/items/:id').put((req,res)=> {
     Items.updateItem(req,res);
 })
 
-
+router.route('/items/seller/:uid').get((req,res)=>{
+    Items.viewSellItem(req,res);
+})
 //routes to check for users
 router.route('/users/signup').get((req,res)=>{
     Users.listAllUsers(req,res);

@@ -54,20 +54,34 @@ exports.updateItem = async (req,res)=> {
             name: req.body.name != null? req.body.name : "unknown",
             description: req.body.description != null? req.body.description : "unknown",
             price: req.body.price != null? req.body.price : "unknown",
-            itemID: itemID
+            itemID: itemID,
+            sold: req.body.sold != null? req.body.sold : true 
         }
     }
     try{
         await items.collection("shoppingItems").updateOne(filter,updateDoc, options);
-        const allItems = await items.collection("shoppingItems").findOne({itemID:itemID}).toArray(function(err, result) {
-            if (err) throw err;
-            console.log(result);
-            db.close();
-        });
+        // const allItems = await items.collection("shoppingItems").findOne({itemID:itemID}).toArray(function(err, result) {
+        //     if (err) throw err;
+        //     console.log(result);
+        //     db.close();
+        // });
+        const allItems = await items.collection("shoppingItems").findOne({itemID:itemID});
         res.status(200).send(allItems);
     }
     catch(err){
         console.log(err);
+    }
+}
+
+exports.viewSellItem = async (req,res)=>{
+    try{
+        const sellItems = await items.collection("shoppingItems").find({seller: req.params.uid}).toArray((err,result)=>{
+            console.log(err);
+        })
+        res.status(200).send(sellItems);
+    }
+    catch(err){
+        console.log("Error at getting sell items: "+ err);
     }
 }
 

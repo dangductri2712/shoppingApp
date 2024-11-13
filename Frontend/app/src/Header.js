@@ -36,8 +36,7 @@ function Header({user, loggedIn, setLoggedIn}) {
           </Nav>
           {
                 storedEmail != null ?
-              //  <Nav.Link className = "navigation-links"href="/">Sign out</Nav.Link>
-              <div id = "account-button">
+              <div id = "account-button"  >
                   <Button className = "me-3"onClick = {()=>{
                     window.location.assign("/profile");
                   }}>Account</Button>
@@ -52,12 +51,6 @@ function Header({user, loggedIn, setLoggedIn}) {
               
                :
                <Nav.Link className = "navigation-links"href="/login">Sign in</Nav.Link>  
-              // if(loggedIn == true){
-              //   ${'.loginStatus'}.replaceWith(`<Nav.Link className = "navigation-links loginStatus"href="/login">Sign in</Nav.Link>  `);
-              // }
-              // else{
-              //   ${'.loginStatus'}.replaceWith(`<Nav.Link className = "navigation-links"href="/signout">Sign out</Nav.Link> `);
-              // }
           }
         </Navbar.Collapse>
       </Container>

@@ -151,7 +151,10 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
 
     }
     return(
-        <Col lg = {4}>
+        <>
+        {
+            item.sold == false || item.sold == null?
+            <Col lg = {4}>
             <Card style={{ width: '18rem' }} className = "mt-3">
         <Card.Img variant="top" src= {item.imageURI} alt = "No image " width = "286px" height = "286px" style = {{objectFit: "contain"}}/>
 
@@ -167,6 +170,12 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
     </Card>
         <Popup show = {show} handleClose = {handleClose} handleShow = {handleShow} item = {item} addToCart = {addToCart}></Popup>
         </Col>
+        :
+        <></>
+        }
+            
+        </>
+        
     )
 }
 

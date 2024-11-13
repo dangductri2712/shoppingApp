@@ -8,6 +8,7 @@ import ItemHistory from '../ItemHistory.js';
 import {useState, useEffect, createRef} from 'react';
 import {findUserInfo} from '../findUserInfo.js';
 import ProfilePage from './ProfilePage.js';
+import ViewSell from './ViewSell.js';
 import './Profile.css';
 const UserProfile = ()=>{
     
@@ -15,8 +16,9 @@ const UserProfile = ()=>{
     const [historyPage,setHistoryPage] = useState(false);
     const [profilePage, setProfilePage] = useState(false);
     const [sellPage, setSellPage] = useState(false);
+    const [viewSellPage, setViewSellPage] = useState(false);
     const userInfo = JSON.parse(localStorage.userInfo);
-    const pageArray = [setHistoryPage, setProfilePage, setSellPage];
+    const pageArray = [setHistoryPage, setProfilePage, setSellPage, setViewSellPage];
     const getUserInfo = async ()=>{
         
         console.log("userInfo: "+userInfo);
@@ -72,6 +74,14 @@ const UserProfile = ()=>{
                     }}>Sell Items</Button>
                 </div>
                     </Col>
+
+                    <Col sm = {12}>
+                    <div id = "viewSellItemTab">
+                    <Button className = "item-center mb-3"onClick = {()=>{
+                        setPage(3);
+                    }}>View & Edit Items</Button>
+                </div>
+                    </Col>
                 </Row>
                 
                
@@ -88,6 +98,9 @@ const UserProfile = ()=>{
                 :
                 sellPage?
                 <SellItemPage></SellItemPage>
+                :
+                viewSellPage?
+                <ViewSell></ViewSell>
                 :
                 <p className = "my-auto">Please select something</p>    
             }
