@@ -2,6 +2,7 @@ import Carousel from 'react-bootstrap/Carousel';
 // import ExampleCarouselImage from 'components/ExampleCarouselImage';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import './Spinner.css';
 function Spinner() {
   return (
     <Carousel className = "h-50"> 

@@ -15,7 +15,8 @@ const ViewSell = ()=>{
         console.log(itemBody);
         await axios.put("http://localhost:8080/items/"+itemBody.itemID, itemBody)
         .then(res=>{
-            console.log(res.data);
+            console.log(res.data.sold);
+            alert("Successfully edit the item");
         })
         .catch(err=>{
             console.log("Error at updating item: "+ err);
@@ -47,54 +48,6 @@ const ViewSell = ()=>{
             {
             sellItems.map(item=>{
                 return(
-                    // <Col sm = {6}>
-                    //     <Card style={{ width: '18rem' }} className = "mt-3">
-                    //             {
-                    //                 item.imageURI == undefined ?
-                    //                 <Card.Img variant = "top" src = "http://localhost:8080/unknown.jpg" alt = "No image"></Card.Img>
-                    //                 :
-                    //                 <Card.Img variant="top" src= {item.imageURI} alt = "No image " />
-                    //             }
-                    //         <Card.Body>
-                    //             <Card.Title>{item.itemName}</Card.Title>
-                    //             <Row>
-                    //                 <Col sm = {6}>
-                    //                 <Card.Text>
-                    //                     Sold: {item.sold != null?  item.sold.toString():  false}
-                    //                 </Card.Text>
-                    //                 </Col>
-                    //                 <Col sm={6}>
-                    //                 <Button onClick = {async ()=>{
-                    //                     console.log(item)
-                    //                     const itemBody = {
-                    //                         itemID: item.itemID,
-                    //                         name: item.name,
-                    //                         description: item.description,
-                    //                         price: item.price,
-                    //                         sold: item.sold!=null? !item.sold : true 
-                    //                     }
-                    //                     alert("Set to sold out");
-                    //                     await updateItem(itemBody)
-                    //                 }}>{item.sold == true? "Not sell" : "Sold"}</Button>
-                    //                 </Col>
-                                
-                    //             </Row>
-                                
-                    //             <Card.Text>
-                    //                 Description: {item.description}
-                    //             </Card.Text>
-                    //             <Card.Text>
-                    //                 Price: {item.price}
-                    //             </Card.Text>
-                    //             <Card.Text>
-                    //                 Seller: {item.seller}
-                    //             </Card.Text>
-                    //             <Button onClick = {()=>{
-                    //                 alert("Switch to edit mode");
-                    //             }}>Edit</Button>
-                    //         </Card.Body>
-                    //     </Card>
-                    // </Col>
                     <SellItemCard item = {item} updateItem={updateItem}></SellItemCard>
                 )
             })
@@ -107,81 +60,109 @@ const ViewSell = ()=>{
 
 const SellItemCard = ({item, updateItem})=>{
     const [editMode, setEditMode] = useState(false);
-    const [sellItem, setSellItem] = useState(item);
-    var newItem = {};
+    // const [sellItem, setSellItem] = useState(item);
+    const [itemName, setItemName] = useState(item.name);
+    const [itemDescription, setItemDescription] = useState(item.description);
+    const [itemPrice, setItemPrice] = useState(item.price);
+    const [itemLocation, setItemLocation] = useState(item.location);
+    const [imageName, setImageName] = useState("unknown.jpg");
+    const [itemSold, setItemSold] = useState(item.sold != null? item.sold : false);
+    var newItem  = {
+        itemID: item.itemID,
+        name: itemName,
+        price: itemPrice,
+        location: itemLocation,
+        description: itemDescription,
+        imageURI: "http://localhost:8080/"+ imageName.toString(),
+        seller: (JSON.parse(localStorage.userInfo).uid).toString()
+    };
+
 
     useEffect(()=>{
-        console.log("Detecting changes in ViewSell.js");
-        newItem = {
-            name: sellItem.name,
-            price: sellItem.price,
-            location: sellItem.location,
-            description: sellItem.description,
-            imageURI: "http://localhost:8080/unknown.png",
+        newItem  = {
+            sold: item.sold,
+            itemID: item.itemID,
+            name: itemName,
+            price: itemPrice,
+            location: itemLocation,
+            description: itemDescription,
+            imageURI: "http://localhost:8080/"+ imageName.toString(),
             seller: (JSON.parse(localStorage.userInfo).uid).toString()
-        }
-    }, [sellItem])
+        };
+    }, [imageName, itemSold])
+    // useEffect(()=>{
+    //     console.log("Detecting changes in ViewSell.js");
+    //     newItem = {
+    //         name: itemName,
+    //         price: itemPrice,
+    //         location: itemLocation,
+    //         description: itemDescription,
+    //         imageURI: "http://localhost:8080/unknown.png",
+    //         seller: (JSON.parse(localStorage.userInfo).uid).toString()
+    //     }
+    // }, [])
     const handleSubmit = async (e)=>{
         const formData = new FormData();
         e.preventDefault();
-        console.log(e.target.uploadFile.files[0]);
-        let file = e.target.uploadFile.files[0];
-        // setFile(e.target.value);
-        formData.append('uploadFile', file);
-        await axios.post("http://localhost:8080/upload", formData, {
-            headers:{
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-        .then(response=>{
-            console.log(response.data);
-        })
-        .catch(err=>{
-            alert("Error uploading files");
-        });
-
+        var fileName = "";
+        if(e.target.uploadFile.files[0] == null){
+            fileName = item.imageURI.toString();
+        }
+        else{
+            fileName = "http://localhost:8080/"+e.target.uploadFile.files[0].name;
+        }
+        console.log(fileName);
         newItem = {
-            name: sellItem.name,
-            price: sellItem.price,
-            location: sellItem.location,
-            description: sellItem.description,
-            imageURI: "http://localhost:8080/"+ e.target.uploadFile.files[0].name,
+            sold: itemSold,
+            itemID: item.itemID,
+            name: itemName,
+            price: itemPrice,
+            location: itemLocation,
+            description: itemDescription,
+            imageURI: fileName,
             seller: (JSON.parse(localStorage.userInfo).uid).toString()
         }
-
-        await axios.post("http://localhost:8080/items", newItem)
-        .then(response=>{
-            console.log(response.data);
-        }
-        )
-        .catch(err=>{
-            console.log("Error at submitting new item's info: "+err);
-            alert("Please try to submit the new item to sell again");
-        });
+        //updating new info into the sell item
+        // await axios.put("http://localhost:8080/items", newItem)
+        // .then(response=>{
+        //     console.log(response.data);
+        // }
+        // )
+        // .catch(err=>{
+        //     console.log("Error at submitting new item's info: "+err);
+        //     alert("Please try to submit the new item to sell again");
+        // });
+        updateItem(newItem);
     }
 
     const handleChange = (e)=>{
         e.preventDefault();
-        const tempSellItem = sellItem;
-        if(tempSellItem != null){
+        
             if(e.target.name == 'itemName'){
-                tempSellItem.name = e.target.value;
+                setItemName(e.target.value);
             }
             else if(e.target.name == "itemDescription"){
-                tempSellItem.description = e.target.value;
+                setItemDescription(e.target.value);
             }
             else if(e.target.name == "itemPrice"){
-                tempSellItem.price = e.target.value;
+                setItemPrice(e.target.value);
             }
             else if(e.target.name == "itemLocation"){
-                tempSellItem.location = e.target.value;
+                setItemLocation(e.target.value);
             }
-            setSellItem(tempSellItem);
-        }
-        else{
-            alert("tempSellItem is empty");
-        }
-
+            // else if(e.target.name == "itemImage"){
+            //     setImageName(e.target.uploadFile.files[0].name);
+            // }
+            else if(e.target.name == "itemSold"){
+                if(e.target.id == "trueCheckBox"){
+                    setItemSold(true);    
+                }
+                else{
+                    setItemSold(false);
+                }
+                // console.log(e.target.value);
+                // setItemSold(e.target.value);
+            }
         
     }
     
@@ -190,37 +171,19 @@ const SellItemCard = ({item, updateItem})=>{
         <Card style={{ width: '18rem' }} className = "mt-3">
                 {
                     item.imageURI == undefined ?
-                    <Card.Img variant = "top" src = "http://localhost:8080/unknown.jpg" alt = "No image"></Card.Img>
+                    <Card.Img variant = "top" width = "286px" height = "151px" style = {{objectFit: "cover"}}src = "http://localhost:8080/unknown.jpg" alt = "No image"></Card.Img>
                     :
-                    <Card.Img variant="top" src= {item.imageURI} alt = "No image " />
+                    <Card.Img variant="top" width = "286px" height = "286px" style = {{objectFit: "contain"}} src= {item.imageURI} alt = "No image " />
                 }
             <Card.Body>
                 <Card.Title>{item.itemName}</Card.Title>
-                <Row>
-                    <Col sm = {6}>
-                    <Card.Text>
-                        Sold: {item.sold != null?  item.sold.toString():  false}
-                    </Card.Text>
-                    </Col>
-                    <Col sm={6}>
-                    <Button onClick = {async ()=>{
-                        console.log(item)
-                        const itemBody = {
-                            itemID: item.itemID,
-                            name: item.name,
-                            description: item.description,
-                            price: item.price,
-                            sold: item.sold!=null? !item.sold : true 
-                        }
-                        alert("Set to sold out");
-                        await updateItem(itemBody)
-                    }}>{item.sold == true? "Not sell" : "Sold"}</Button>
-                    </Col>
-                
-                </Row>
+               
                 {
                     editMode == false?
                     <>
+                     <Card.Text>
+                        Sold: {item.sold != null?  item.sold.toString():  false}
+                    </Card.Text>
                         <Card.Text>
                     Description: {item.description}
                 </Card.Text>
@@ -232,25 +195,33 @@ const SellItemCard = ({item, updateItem})=>{
                 </Card.Text>
                     </>
                     :
-                    <form enctype = "multipart/form-data">
+                    <form enctype = "multipart/form-data" onSubmit = {handleSubmit}>
                         <h5>
                     Item Name
                 </h5>
                 <label className = "mt-3">
-                    <input type = "text" name = "itemName" value = {sellItem.name} onChange = {handleChange}></input>
+                    <input type = "text" name = "itemName" value = {itemName} onChange = {handleChange}></input>
                 </label>
-
+                <h5>
+                    Set to sold
+                </h5>
+                <label className = "mt-3">
+                    <input type = "radio" id = "trueCheckBox"name = "itemSold" value = {itemSold} onChange = {handleChange} ></input>
+                    <label style = {{marginRight: "20px"}} for = "trueCheckBox">True</label>
+                    <input type = "radio" id = "falseCheckBox" name = "itemSold" value = {itemSold} onChange = {handleChange}></input>
+                    <label for = "falseCheckBox">False</label>
+                </label>
                 <h5>
                     Item Description
                 </h5>
                 <label className = "mt-3">
-                    <input type = "text" name = "itemDescription" value = {sellItem.description} onChange = {handleChange}></input>
+                    <input type = "text"  name = "itemDescription" value = {itemDescription} onChange = {handleChange}></input>
                 </label>
                 <h5>
                     Item Price
                 </h5>
-                <label className = "mt-3">
-                    <input type = "text" name = "itemPrice" value = {sellItem.price} onChange = {handleChange}></input>
+                <label >
+                    <input type = "text" name = "itemPrice" value = {itemPrice} onChange = {handleChange}></input>
                 </label>
 
 
@@ -258,22 +229,29 @@ const SellItemCard = ({item, updateItem})=>{
                     Item Location
                 </h5>
                 <label className = "mt-3">
-                    <input type = "text" name = "itemLocation" value = {sellItem.location} onChange = {handleChange}></input>
+                    <input type = "text" name = "itemLocation" value = {itemLocation} onChange = {handleChange}></input>
                 </label>
                 
                 <h5>Select the Item's image</h5>
                 <label className = "mt-3">
-                    <input type = "file" name = "uploadFile" required></input>
+                    <input type = "file" name = "uploadFile" onChange = {handleChange}></input>
                 </label>
-                        <button type = "submit" onSubmit = {handleSubmit}>Submit</button>
+                        <button type = "submit">Submit</button>
                     </form>
                     
                 }
-                
-                <Button onClick = {()=>{
-                    alert("Switch to edit mode");
-                    setEditMode(true);
-                }}>Edit</Button>
+                {
+                    editMode == true?
+                    <Button className = "mt-5" onClick = {
+                        ()=>{
+                            setEditMode(false);
+                        }
+                    }>Cancel</Button>
+                    :
+                    <Button className = "mt-3"onClick = {()=>{
+                        setEditMode(true);
+                    }}>Edit</Button>
+                }
             </Card.Body>
         </Card>
     </Col>

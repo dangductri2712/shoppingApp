@@ -48,23 +48,19 @@ exports.updateItem = async (req,res)=> {
     console.log("Item's ID is: "+ itemID);
     const filter = {itemID: itemID};
     const options = {upsert: true};   //only update if there is no identical documents.
-
+    
     const updateDoc = {
         $set: {
             name: req.body.name != null? req.body.name : "unknown",
             description: req.body.description != null? req.body.description : "unknown",
             price: req.body.price != null? req.body.price : "unknown",
             itemID: itemID,
-            sold: req.body.sold != null? req.body.sold : true 
+            sold: req.body.sold != null? req.body.sold : true ,
+            imageURI: req.body.imageURI != null? req.body.imageURI : "http://localhost:8080/unknown.png"
         }
     }
     try{
         await items.collection("shoppingItems").updateOne(filter,updateDoc, options);
-        // const allItems = await items.collection("shoppingItems").findOne({itemID:itemID}).toArray(function(err, result) {
-        //     if (err) throw err;
-        //     console.log(result);
-        //     db.close();
-        // });
         const allItems = await items.collection("shoppingItems").findOne({itemID:itemID});
         res.status(200).send(allItems);
     }

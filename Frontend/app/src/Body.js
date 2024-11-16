@@ -88,7 +88,7 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
     */
     const addToCart = (addedItem)=>{
         console.log("Adding to cart");
-
+        console.log(addedItem);
         if(JSON.parse(localStorage.userInfo).email == null){
             alert("please login first to buy items");
         }
@@ -114,6 +114,7 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
                             identical = true;
                             tempAmount = tempList[i].amount + 1;
                             tempList[i].amount = tempAmount;
+                            tempList[i].imageURI = addedObject.imageURI;
                             handleListConfirmation(tempList);
                             break;
                         }
@@ -179,6 +180,17 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
     )
 }
 
+/**
+ * 
+ * @param {listConfirmation}: 
+ *      type: Array useState
+ *      purpose: To hold the list of all the items you are going to buy
+ * @param {handListConfirmation}:
+ *      type: setter for listConfirmation
+ *      purpose: To set new array into listConfirmation 
+ * @returns 
+ *      an HTML structure containing a modal that will store all the items you are going to buy
+ */
 const List = ({listConfirmation, handleListConfirmation})=>{
     const [show, handleShow] = useState(false);
     var tempList = [];
@@ -229,7 +241,8 @@ const List = ({listConfirmation, handleListConfirmation})=>{
                 seller: listConfirmation[i].seller,
                 buyer: JSON.parse(localStorage.userInfo).uid.toString(),
                 imageURI: listConfirmation.imageURI,
-                buyDate: new Date()
+                buyDate: new Date(), 
+                imageURI: listConfirmation[i].imageURI
             })
         }
         await axios.post("http://localhost:8080/user/history/", historyPostBody)
