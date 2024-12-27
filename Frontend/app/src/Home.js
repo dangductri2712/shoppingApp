@@ -14,6 +14,10 @@ const featuresArray = ["Personalized Recommendations: Get tailored suggestions b
                       ];
 function Home() {
   var evenOdd = 0;
+  var chosenEmail = {};
+  if(localStorage.userInfo != undefined){
+      chosenEmail = JSON.parse(localStorage.userInfo).email;
+  }
   return (
     <>
       <div>
@@ -69,7 +73,7 @@ function Home() {
         </Col>
 
       {
-        JSON.parse(localStorage.userInfo).email == null?
+        chosenEmail == null?
         <Col lg = {4}>
         <Card style={{ width: '18rem' , marginTop: "50px"}}>
         <Card.Img variant="top" src= "http://localhost:8080/magnifying-glass.png" alt = "No image " />

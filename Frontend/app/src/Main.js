@@ -5,10 +5,15 @@ import Signup from './Signup';
 import Profile from './Profile';
 import UserProfile from './profile/UserProfile';
 const {useState, useEffect} = require('react');
+
 function Main({user,changeUser, setLoggedIn, loggedIn}){
+  const [chosenEmail, setChosenEmail] = useState("unknown.email.com");
   var data = {};
   var userIdentity = {};
   useEffect(()=>{
+    if(localStorage.userInfo != undefined ){
+      setChosenEmail(JSON.parse(localStorage.userInfo).email);
+    }
     console.log(user);
     if(user != null){
       userIdentity = user;

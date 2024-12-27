@@ -47,9 +47,9 @@ router.route('/user/seller/:uid').get((req,res)=>{
     Users.getSellerInfo(req,res);
 })
 
-// router.route('/users/login').post((req,res)=>{
-//     Users.checkForLogin(req,res);
-// })
+router.route('/users/login').post((req,res)=>{
+    Users.checkForLogin(req,res);
+})
 
 router.route('/user/history/:uid').get((req,res)=>{
     History.viewHistory(req,res);

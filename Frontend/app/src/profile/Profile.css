@@ -10,10 +10,12 @@
 }
 
 #sideBar img {
-    border-radius: 50%;
-    width: 300px;
+    /* border-radius: 50%; */
+    /* width: 300px; */
     height: 20vh;
     object-fit: cover;
+    margin-right: auto;
+    margin-left:auto;
 }
 #profile{
     border-style: solid;
@@ -22,6 +24,9 @@
 }
 
 
-@media only screen and (max-width: 400px){
-    
+@media only screen and (max-width: 672px){
+    #sideBar{
+        background-color: black;
+        height: 50vh;
+    }
 }

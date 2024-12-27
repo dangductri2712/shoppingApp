@@ -28,15 +28,21 @@ List: responsible for providing all the added items that will be transfered to <
 */
 import  {useState, useEffect} from "react";
 
-const Body =  ({loggedIn, setLoggedIn})=>{
+// const Body =  ({loggedIn, setLoggedIn})=>{
+    const Body =  ({chosenEmail})=>{
     const [listItems, setListItems] = useState({});
     const [listConfirmation, handleListConfirmation] = useState([]);
     useEffect( ()=> {
         try{
             axios.get("http://localhost:8080/items")
             .then(response => {
-                console.log(response.data[0].name);
-                setListItems(response.data);
+                if(response.data == "There is no items in the db"){
+                    console.log("There is no items in db");
+                }
+                else{
+                    setListItems(response.data);
+                }
+                
             });
         }
         catch(err){
@@ -47,7 +53,7 @@ const Body =  ({loggedIn, setLoggedIn})=>{
         <>
             <Spinner></Spinner>
             <Container className = "mt-3">
-                <ItemRows  listItems = {listItems} listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation}></ItemRows>
+                <ItemRows  chosenEmail = {chosenEmail} listItems = {listItems} listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation}></ItemRows>
             </Container>
 
             <List listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation} ></List>
@@ -56,7 +62,7 @@ const Body =  ({loggedIn, setLoggedIn})=>{
 }
 
 
-const ItemRows = ({listItems, listConfirmation, handleListConfirmation})=> {
+const ItemRows = ({chosenEmail, listItems, listConfirmation, handleListConfirmation})=> {
     console.log(listItems);
     return (
         <>
@@ -65,17 +71,26 @@ const ItemRows = ({listItems, listConfirmation, handleListConfirmation})=> {
                 {
                     listItems.map(item=> {
                         return(
-                            <ItemCard  item = {item} listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation}></ItemCard>
+                            <ItemCard chosenEmail = {chosenEmail} item = {item} listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation}></ItemCard>
                         )
                     })
                 }
-        </Row> : <p>Issue catching list of items</p>}
+        </Row> : 
+        <Row className = "d-flex justify-content-center">
+            <Col sm = {12}>
+            <img id = "nothing-logo" src = "http://localhost:8080/not-found.png" />
+            </Col>
+            <Col sm = {12}>
+            <h5 id = "nothing-text">It seems there is none yet</h5>
+            </Col>
+            
+        </Row>}
         </>
         
        
       );
 }
-const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
+const ItemCard = ({chosenEmail, item, listConfirmation, handleListConfirmation})=> {
     console.log(item.imageURI);
     const [show, handleShow] = useState(false);
 
@@ -89,7 +104,8 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
     const addToCart = (addedItem)=>{
         console.log("Adding to cart");
         console.log(addedItem);
-        if(JSON.parse(localStorage.userInfo).email == null){
+        // if(JSON.parse(localStorage.userInfo).email == null){
+            if(chosenEmail == ""){
             alert("please login first to buy items");
         }
         else{
@@ -173,10 +189,8 @@ const ItemCard = ({item, listConfirmation, handleListConfirmation})=> {
         </Col>
         :
         <></>
-        }
-            
+        } 
         </>
-        
     )
 }
 
@@ -260,11 +274,14 @@ const List = ({listConfirmation, handleListConfirmation})=>{
     }
     return(
         <>
-            <Button variant="primary" onClick={handleShow}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-  <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-</svg>
-        </Button>
+            
+                <Button variant="primary" onClick={handleShow}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+      <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+    </svg>
+            </Button>
+           
+            
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Confirmation</Modal.Title>

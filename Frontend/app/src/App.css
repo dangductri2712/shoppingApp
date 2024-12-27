@@ -8,16 +8,30 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
+/* .App-logo {
+  height: 10vmin;
   pointer-events: none;
-}
+} */
 
 
 /* #account-button{
   position: absolute;
   right: 0px;
 } */
+
+/* explanation of id and class:
+#nothing-logo: Used for the magnifying glass logo for when there is either no items in db or the items the customer search for is not there
+*/
+
+#nothing-logo{
+  width: 300px;
+  height: 300px;
+  margin-left: 30vw;
+}
+#nothing-text{
+  color: #28D095;
+  margin-left: 30vw;
+}
 
 .navigation-links{
   margin-left: 100px;
@@ -56,11 +70,13 @@
   width:100vw;
   position: relative;
   z-index: 999;
-  margin-top: 50px;
+  /* margin-top: 50px; */
 }
 
 #intro_img img{
   border-radius: 50%;
+  height: 50vh;
+  object-fit: contain;
 }
 
 
@@ -121,9 +137,9 @@
   margin-right: auto;
 } */
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
+  /* .App-logo {
     animation: App-logo-spin infinite 20s linear;
-  }
+  } */
 }
 
 .App-header {
@@ -187,7 +203,10 @@ body{
   #intro h5{
     font-size: 18px;
   }
-
+  #nothing-logo{
+    width: 100px;
+    height: 100px;
+  }
   .orange-text{
     color: var(--hover-color);
     position: absolute;

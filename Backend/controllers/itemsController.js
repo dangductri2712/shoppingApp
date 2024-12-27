@@ -12,19 +12,32 @@ exports.listAllItems = async (req,res)=> {
         console.log(result);
         // db.close();
     });
-    res.status(200).send(allItems);
+    if(allItems.length == 0){  //if there is no items
+        res.status(200).send("There is no items in the db");
+    }
+    else{
+        res.status(200).send(allItems);
+    }
+    
 }
 
 //insert items into the collection
 exports.insertItem = async (req,res)=> {
     //find the id of the latest item in mongodb.
+    var newID = 0;
     const listofItems = await items.collection("shoppingItems").find({}).sort({itemID: -1}).toArray(function (err,result){
         if(err){
             items.close();
         }
         console.log(result);
     });    //get the list of item to know the largest ID to add in a new ID
-    const newID = Number(listofItems[0].itemID) + 1;
+    if(listofItems.length == 0 ){
+        newID = 0;
+    }
+    else{
+        newID = Number(listofItems[0].itemID) + 1;
+    }
+    
 
     console.log("Inserting item");
     const insertBody = {

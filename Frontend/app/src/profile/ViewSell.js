@@ -122,16 +122,6 @@ const SellItemCard = ({item, updateItem})=>{
             imageURI: fileName,
             seller: (JSON.parse(localStorage.userInfo).uid).toString()
         }
-        //updating new info into the sell item
-        // await axios.put("http://localhost:8080/items", newItem)
-        // .then(response=>{
-        //     console.log(response.data);
-        // }
-        // )
-        // .catch(err=>{
-        //     console.log("Error at submitting new item's info: "+err);
-        //     alert("Please try to submit the new item to sell again");
-        // });
         updateItem(newItem);
     }
 

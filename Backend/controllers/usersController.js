@@ -145,19 +145,38 @@ exports.checkForLogin = async (req,res)=>{
         
         for(var i=0; i< listOfUsers.length; i++){
             if(req.body.email == listOfUsers[i].email){
-                console.log("req.body.email: "+req.body.email);
-                console.log("req.body.password"+req.body.password);
-                console.log("listOfUsers[i].password: "+listOfUsers[i].password);
-
-                verification.password = await bcrypt.compare(req.body.password, listOfUsers[i].password);
-                verification.email = true;
-                verification.user = listOfUsers[i];
-                break;
+                    verification.email = true;
+                    console.log("req.body.email: "+req.body.email);
+                    console.log("req.body.password: "+req.body.password);
+                    console.log("listOfUsers[i].password: "+listOfUsers[i].password);
+                    // bcrypt.compare(req.body.password, listOfUsers[i].password, (err,result)=>{
+                    //     if(err){
+                    //         console.log("There is an error at logging in: "+err);
+                    //     }
+                    //     console.log("Result of hashing is: "+ result);
+                    //     verification.password = result;
+                        
+                    // });
+                    await bcrypt.compare(req.body.password, listOfUsers[i].password)
+                    .then(res=>{
+                        console.log("Result of hasing is: "+res);
+                        verification.password = res;
+                    })
+                    .catch(err=>{
+                        console.log("Having error at bcrypt.compare: "+ err);
+                    })
+                    
+                    if(verification.password == true){
+                        verification.user = listOfUsers[i];
+                    }
+                    break;       
             }
         }
-
+        console.log("verification.email: "+ verification.email);
+        console.log("verification.password: "+ verification.password);
         if(verification.email == false || verification.password == false){
             res.status(500).send({verification: false});
+            throw Error("Either email or password is wrong");
         }
         else if(verification.email == true && verification.password == true){
             console.log("Verification successfull");

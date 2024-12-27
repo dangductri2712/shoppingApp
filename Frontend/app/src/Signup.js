@@ -22,27 +22,32 @@ const Signup = ({loggedIn, setLoggedIn})=>{
     const handlePasswordChange = (event)=>{
         setPassword(event.target.value);
     }
+
+    const handleSubmit = async (e)=>{
+      e.preventDefault();
+      await axios.post("http://localhost:8080/users/signup", {
+          name: name,
+          email: email,
+          password: password
+      })
+      .then((result)=>{
+          alert("Successfully create new login");
+          // setLoggedIn(true);
+          window.location.assign("/login");
+
+      })
+      .catch(err=>{
+          alert("Something is wrong. Please check again");
+      
+      }
+    )
     return(
         <>
-          {/* <Header></Header> */}
           <Card id = "inputCard" style={{ width: '20rem'}} className = "mt-3 mx-auto">
         <Card.Img variant="top" src= "http://localhost:8080/account.jpg" alt = "No image " />
         <Card.Body className = "cardBody">
-        <form method = "post" style = {{position: "relative"}}onSubmit={async ()=>{
-            await axios.post("http://localhost:8080/users/signup", {
-                name: name,
-                email: email,
-                password: password
-            })
-            .then((result)=>{
-                alert("Successfully create new login");
-                // setLoggedIn(true);
-                window.location.assign("/login");
-
-            })
-            .catch(err=>{
-                alert("Something is wrong. Please check again");
-            })
+        <form  style = {{position: "relative"}}onSubmit={()=>{
+          handleSubmit();
         }}>
         <Row>
         <Col>
@@ -58,7 +63,7 @@ const Signup = ({loggedIn, setLoggedIn})=>{
         <Col>
         <label className = "mb-3">
           Password: 
-          <input className = "inputBox" type="text" value={password} onChange={handlePasswordChange} />
+          <input className = "inputBox" type="password" value={password} onChange={handlePasswordChange} />
         </label>
         </Col>   
         <input type="submit" value="Submit" /> 
@@ -70,8 +75,9 @@ const Signup = ({loggedIn, setLoggedIn})=>{
       </Card>
         </>
         
-        
+         
     )
+}
 }
 
 export default Signup;
