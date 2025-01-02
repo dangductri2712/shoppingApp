@@ -54,7 +54,10 @@ const ItemHistory = ()=>{
                                     Seller: {item.seller}
                                 </Card.Text>
                                 <Card.Text>
-                                    Bought on: {item.buyDate}
+                                    Bought on: {item.buyDate} 
+                                </Card.Text>
+                                <Card.Text>
+                                    Amount: {item.amount == null? 1: item.amount}
                                 </Card.Text>
                             </Card.Body>
                         </Card>

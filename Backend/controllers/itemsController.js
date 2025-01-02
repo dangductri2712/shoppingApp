@@ -7,7 +7,7 @@ const items = db.client.db("shoppingAppDB");
 
 exports.listAllItems = async (req,res)=> {
     console.log("list all items in shopping");
-    const allItems = await items.collection("shoppingItems").find({}).toArray(function(err, result) {
+    const allItems = await items.collection("shoppingItems").find({}).sort({itemID: -1}).toArray(function(err, result) {
         if (err) throw err;
         console.log(result);
         // db.close();

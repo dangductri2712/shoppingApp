@@ -1,6 +1,6 @@
 const {google} = require('googleapis');
 const createReadStream = require('fs').createReadStream;
-const pkey = require('./shoppingApp-pk.json');
+// const pkey = require('./shoppingApp-pk.json');
 const SCOPES = ["https://www.google.apis.com/auth/drive"];
 const AWS = require("aws-sdk");
 const { env } = require('process');
