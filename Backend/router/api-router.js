@@ -66,9 +66,9 @@ router.route('/user/history').post((req,res)=>{
 //     Users.checkLoginStatus(req,res);
 // })
 
-// router.route('/upload').post((req,res)=>{
-//     Files.uploadFile(req,res);
-// })
+router.route('/upload').post((req,res)=>{
+    Files.uploadFile(req,res);
+})
 
 
 module.exports = router;

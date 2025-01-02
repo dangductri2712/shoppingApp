@@ -5,6 +5,10 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 
+/**
+ * This page is used to edit the items customers are selling
+ * @returns 
+ */
 const ViewSell = ()=>{
     const [sellItems, setSellItems] = useState([]);
     /**
@@ -90,17 +94,7 @@ const SellItemCard = ({item, updateItem})=>{
             seller: (JSON.parse(localStorage.userInfo).uid).toString()
         };
     }, [imageName, itemSold])
-    // useEffect(()=>{
-    //     console.log("Detecting changes in ViewSell.js");
-    //     newItem = {
-    //         name: itemName,
-    //         price: itemPrice,
-    //         location: itemLocation,
-    //         description: itemDescription,
-    //         imageURI: "http://localhost:8080/unknown.png",
-    //         seller: (JSON.parse(localStorage.userInfo).uid).toString()
-    //     }
-    // }, [])
+
     const handleSubmit = async (e)=>{
         const formData = new FormData();
         e.preventDefault();

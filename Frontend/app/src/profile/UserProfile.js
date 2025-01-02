@@ -114,6 +114,8 @@ const SellItemPage = ()=>{
     const [itemPrice, setItemPrice] = useState("");
     const [itemLocation, setItemLocation] = useState("");
     const [itemDescription, setItemDescription] = useState("");
+    // const [imageURI, setImageURI] = useState("");
+    var imageURI = "";
     const fileInput = createRef();
     const formData = new FormData();
     const [file, setFile] = useState("");
@@ -133,20 +135,27 @@ const SellItemPage = ()=>{
             setItemLocation(e.target.value);
         }
     }
-
+    // useEffect(()=>{
+    //     console.log("imageURI changed: "+ imageURI);
+    // }, [imageURI]);
     const handleSubmit = async (e)=>{
         e.preventDefault();
         console.log(e.target.uploadFile.files[0]);
         let file = e.target.uploadFile.files[0];
         // setFile(e.target.value);
         formData.append('uploadFile', file);
+        // formData.append('fileName',e.target.uploadFile.files[0].name);
+        var fileName = e.target.uploadFile.files[0].name;
         await axios.post("http://localhost:8080/upload", formData, {
             headers:{
                 'Content-Type': 'multipart/form-data'
             }
         })
         .then(response=>{
+            alert("Send successfully");
             console.log(response.data);
+            // setImageURI(response.data.imageURI);
+            imageURI = response.data.imageURI;
         })
         .catch(err=>{
             alert("Error uploading files");
@@ -157,11 +166,13 @@ const SellItemPage = ()=>{
             price: itemPrice,
             location: itemLocation,
             description: itemDescription,
-            imageURI: "http://localhost:8080/"+ e.target.uploadFile.files[0].name,
+            // imageURI: "http://localhost:8080/"+ e.target.uploadFile.files[0].name,
+            imageURI: imageURI,
             seller: (JSON.parse(localStorage.userInfo).uid).toString()
         }
-
-        await axios.post("http://localhost:8080/items", newItem)
+        if(imageURI != ""){
+            console.log(newItem.imageURI);
+            await axios.post("http://localhost:8080/items", newItem)
         .then(response=>{
             console.log(response.data);
         }
@@ -170,6 +181,10 @@ const SellItemPage = ()=>{
             console.log("Error at submitting new item's info: "+err);
             alert("Please try to submit the new item to sell again");
         });
+        }
+        else{
+            alert("Error. image URI is not yet set");
+        }
     }
     return(
         <>

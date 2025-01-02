@@ -25,7 +25,7 @@ exports.listAllItems = async (req,res)=> {
 exports.insertItem = async (req,res)=> {
     //find the id of the latest item in mongodb.
     var newID = 0;
-    const listofItems = await items.collection("shoppingItems").find({}).sort({itemID: -1}).toArray(function (err,result){
+    const listofItems = await items.collection("shoppingItems").find({}).sort({itemID: -1}).toArray(function (err,result){  //from largest to smallest
         if(err){
             items.close();
         }
@@ -50,7 +50,7 @@ exports.insertItem = async (req,res)=> {
         seller: req.body.seller != null? req.body.seller : "0"
     }
     await items.collection("shoppingItems").insertOne(insertBody);
-    res.status(201).send("Successfully insert "+ insertBody.name);
+    res.status(201).send({item: insertBody});
 }
 
 //update the collection's document
