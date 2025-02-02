@@ -1,6 +1,7 @@
 const db = require("../db/mongo.js");
 const argon2 = require("argon2");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 db.connectDb();
 const items = db.client.db("shoppingAppDB");
 

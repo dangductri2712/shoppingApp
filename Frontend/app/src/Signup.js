@@ -41,13 +41,31 @@ const Signup = ({loggedIn, setLoggedIn})=>{
       
       }
     )
+  }
     return(
         <>
           <Card id = "inputCard" style={{ width: '20rem'}} className = "mt-3 mx-auto">
         <Card.Img variant="top" src= "http://localhost:8080/account.jpg" alt = "No image " />
         <Card.Body className = "cardBody">
-        <form  style = {{position: "relative"}}onSubmit={()=>{
-          handleSubmit();
+        <form  style = {{position: "relative"}} onSubmit={async (e)=>{
+          // handleSubmit();
+          e.preventDefault();
+          await axios.post("http://localhost:8080/users/signup", {
+            name: name,
+            email: email,
+            password: password
+          })
+          .then((result)=>{
+              alert("Successfully create new login");
+              // setLoggedIn(true);
+              window.location.assign("/login");
+
+          })
+          .catch(err=>{
+              alert("Something is wrong. Please check again");
+          
+          }
+    )
         }}>
         <Row>
         <Col>
@@ -73,11 +91,9 @@ const Signup = ({loggedIn, setLoggedIn})=>{
       </form>
         </Card.Body>
       </Card>
-        </>
-        
-         
-    )
-}
-}
+        </>  
+      )
+    }
+
 
 export default Signup;

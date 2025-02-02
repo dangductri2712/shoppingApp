@@ -8,25 +8,28 @@ import './Signup.css';
 const {useState, useEffect} = require("react");
 
 const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [uid, setUID] = useState("");
   const getUserInfo = async (email)=>{
       if(email != ""){
         await axios.get("http://localhost:8080/user/email/"+ email)
-      .then(res=>{
-          setUID(res.data.userID);
-      })
+        .then(res=>{
+            setUID(res.data.userID);
+        })
+        .catch(err=>{
+          console.log("Error at getting user's info after login: "+err);
+        })
       }
       else{
         alert("email is empty in Login.js");
       }
       
   }
-  const handleNameChange = (event)=>{
-      setName(event.target.value);
-  }
+  // const handleNameChange = (event)=>{
+  //     setName(event.target.value);
+  // }
 
   const handleEmailChange = (event)=>{
       setEmail(event.target.value);
@@ -43,10 +46,10 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
   useEffect(()=>{
     postBody.email = email;
     postBody.password = password;
-    postBody.name = name;
-    getUserInfo(postBody.email);
+    // postBody.name = name;
+    // getUserInfo(postBody.email);
 
-}, [name, password, email])
+}, [email, password])
   return(
       <>
         {/* <Header loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}></Header> */}
@@ -58,20 +61,19 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
           if(postBody.password != "" && postBody.email != ""){
             alert("Starting the authentication");
             await axios.post("http://localhost:8080/users/login", postBody)
-          .then((result)=>{
-              alert("Authentication correct");
-              setLoggedIn(true);
-              changeUser(result.data.user);
-              window.location.assign("/profile");
-          })
-          .catch(err=>{
-              alert("Something is wrong. Please check again");
-              console.log(err);
-          })
-
+            .then((result)=>{
+                alert("Authentication correct");
+                getUserInfo(postBody.email);
+                setLoggedIn(true);
+                changeUser(result.data.user);
+                window.location.assign("/profile");
+            })
+            .catch(err=>{
+                alert("Something is wrong. Please check again");
+                console.log(err);
+            })
           //store user and password on client's browser
-
-          localStorage.setItem("userInfo", JSON.stringify({email: email, uid: uid}));
+            localStorage.setItem("userInfo", JSON.stringify({email: email, uid: uid}));
           }
           else{
             alert("The information can not be empty");
