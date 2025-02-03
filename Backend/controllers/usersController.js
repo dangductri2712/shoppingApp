@@ -44,7 +44,6 @@ exports.getSpecificUser = async (req, res)=>{
         else{
             res.status(200).send(user);
         }
-        
     }
     catch(err){
         console.log("Error at getSpecificUser: "+ err);

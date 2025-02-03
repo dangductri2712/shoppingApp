@@ -15,7 +15,7 @@ function App(){
     alert("userID.name: "+userID.name);
     data = {...userID};
     setUser(data);
-    alert()
+    alert(data);
   }
   useEffect(()=>{
     console.log("App.js");

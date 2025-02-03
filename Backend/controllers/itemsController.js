@@ -13,7 +13,7 @@ exports.listAllItems = async (req,res)=> {
         // db.close();
     });
     if(allItems.length == 0){  //if there is no items
-        res.status(200).send("There is no items in the db");
+        res.status(204).send("There is no items in the db");
     }
     else{
         res.status(200).send(allItems);
@@ -50,7 +50,7 @@ exports.insertItem = async (req,res)=> {
         seller: req.body.seller != null? req.body.seller : "0"
     }
     await items.collection("shoppingItems").insertOne(insertBody);
-    res.status(201).send({item: insertBody});
+    res.status(201).send(insertBody);
 }
 
 //update the collection's document

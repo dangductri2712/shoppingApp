@@ -8,10 +8,12 @@ exports.insertHistory = async (req,res)=>{
     console.log(req.body);
     const historyBody = req.body;
     await items.collection("history").insertMany(historyBody)
-    .then(res=>{
+    .then(response=>{
         console.log("Successfully save the history");
+        res.status(201).send(historyBody);
     })
     .catch(err=>{
+        res.status(500).send(err);
         console.log("There is an issue saving the history: "+err);
     })
 }

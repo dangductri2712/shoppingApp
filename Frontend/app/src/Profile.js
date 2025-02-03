@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Header from './Header';
 import UserProfile from './profile/UserProfile';
+import APIAccesser from './APIAccesser';
 import './Signup.css';
 const {useState, useEffect} = require("react");
 
@@ -14,16 +15,25 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
   const [uid, setUID] = useState("");
   const getUserInfo = async (email)=>{
       if(email != ""){
-        await axios.get("http://localhost:8080/user/email/"+ email)
-        .then(res=>{
-            setUID(res.data.userID);
-        })
-        .catch(err=>{
-          console.log("Error at getting user's info after login: "+err);
-        })
+        // await axios.get("http://localhost:8080/user/email/"+ email)
+        // .then(res=>{
+        //     setUID(res.data.userID);
+        // })
+        // .catch(err=>{
+        //   console.log("Error at getting user's info after login: "+err);
+        // })
+        const endpoint = "user/email/"+email;
+        const result = await APIAccesser(endpoint, "GET");
+        console.log(result.data);
+        if(result.status != "failed"){
+          setUID(result.data.userID);
+        }
+        else{
+          alert("Can not get result from login: "+ result.data);
+        }
       }
       else{
-        alert("email is empty in Login.js");
+        console.log("email is empty in Login.js");
       }
       
   }
@@ -38,18 +48,25 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
   const handlePasswordChange = (event)=>{
       setPassword(event.target.value);
   }
+
+  // const storeLocalStorage = async()=>{
+  //   await localStorage.setItem("userInfo", JSON.stringify({email: email, uid: uid}));
+  // }
   const postBody = {
     email: "",
     password: "",
-    name: ""
+    // name: ""
   }
   useEffect(()=>{
     postBody.email = email;
     postBody.password = password;
+    postBody.uid = uid;
     // postBody.name = name;
     // getUserInfo(postBody.email);
-
-}, [email, password])
+    console.log("uid of this user is: "+uid);
+    // storeLocalStorage();
+    
+}, [email, password, uid])
   return(
       <>
         {/* <Header loggedIn = {loggedIn} setLoggedIn = {setLoggedIn}></Header> */}
@@ -62,18 +79,26 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
             alert("Starting the authentication");
             await axios.post("http://localhost:8080/users/login", postBody)
             .then((result)=>{
+              console.log(result.data.user);
                 alert("Authentication correct");
                 getUserInfo(postBody.email);
                 setLoggedIn(true);
                 changeUser(result.data.user);
-                window.location.assign("/profile");
+                console.log(uid);
+                localStorage.setItem("userInfo", JSON.stringify({email: email, uid: postBody.uid}));
+                if(JSON.parse(localStorage.userInfo).uid != ""){
+                  window.location.assign("/profile");
+                }
+                else{
+                  alert("uid missing");
+                }
             })
             .catch(err=>{
                 alert("Something is wrong. Please check again");
                 console.log(err);
             })
           //store user and password on client's browser
-            localStorage.setItem("userInfo", JSON.stringify({email: email, uid: uid}));
+            
           }
           else{
             alert("The information can not be empty");

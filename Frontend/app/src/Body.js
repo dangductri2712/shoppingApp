@@ -12,6 +12,7 @@ import Popup from './Popup';
 import './App.css';
 import  {useState, useEffect} from "react";
 
+import APIAccesser from "./APIAccesser.js";
 /*    ************
 ItemRows: responsible for the return of the items card. 
     Params: 
@@ -38,22 +39,39 @@ List: responsible for providing all the added items that will be transfered to <
         })
         setTotal(tempTotal);
     }
-    useEffect( ()=> {
-        try{
-            axios.get("http://localhost:8080/items")
-            .then(response => {
-                if(response.data == "There is no items in the db"){
-                    console.log("There is no items in db");
-                }
-                else{
-                    setListItems(response.data);
-                }
-                
-            });
+
+    const getItems = async()=>{
+        var result = await APIAccesser("items", "GET");
+        if(result.status != "failed"){
+            setListItems(result.data);      
         }
-        catch(err){
-            console.log("Problem with listing items: "+err);
-        }       
+        else{
+            console.log("Error at getting items: "+result.data);
+        }
+    }
+    useEffect(()=> {
+            // // axios.get("http://localhost:8080/items")
+            // // axios.get("https://shopping-app-backend-v1.onrender.com/items")
+            // var result = await APIAccesser("items", "GET");
+            // // axios.get("https://shopping-app-backend-v1.onrender.com/items")
+            // // .then(response => {
+            // //     if(response.data == "There is no items in the db"){
+            // //         console.log("There is no items in db");
+            // //     }
+            // //     else{
+            // //         setListItems(response.data);
+            // //     }
+            // // })
+            // // .catch(err=>{
+            // //     console.log("Error at getting items: "+err);
+            // // });
+            // if(result != "endpoint /items has failed"){
+            //     setListItems(result);      
+            // }
+            // else{
+            //     console.log("Error at getting items: "+result);
+            // }
+            getItems();
     }, []);
     useEffect(()=>{
         calculateTotal();
@@ -73,6 +91,7 @@ List: responsible for providing all the added items that will be transfered to <
 
 
 const ItemRows = ({calculateTotal, chosenEmail, listItems, listConfirmation, handleListConfirmation})=> {
+
     console.log(listItems);
     return (
         <>
@@ -281,7 +300,6 @@ const List = ({total,listConfirmation, handleListConfirmation})=>{
                     // }
                     // break;
                     tempList.splice(i, 1);
-
                 }
                 
             }
@@ -318,14 +336,23 @@ const List = ({total,listConfirmation, handleListConfirmation})=>{
                 amount: listConfirmation[i].amount
             })
         }
-        await axios.post("http://localhost:8080/user/history/", historyPostBody)
-        .then((result)=>{
+        // await axios.post("http://localhost:8080/user/history/", historyPostBody)
+        // .then((result)=>{
+        //     alert("Purchase completed. Congratulation");
+        // })
+        // .catch(err=>{
+        //     console.log("Error at storing history: "+err);
+        //     alert("Something is wrong. Please reload and try again")
+        // })
+        const result = await APIAccesser("user/history", "POST", historyPostBody);
+        if(result.status != "failed"){
             alert("Purchase completed. Congratulation");
-        })
-        .catch(err=>{
-            console.log("Error at storing history: "+err);
-            alert("Something is wrong. Please reload and try again")
-        })
+        }
+        else{
+            console.log("Error at storing history: "+result.data);
+        //     alert("Something is wrong. Please reload and try again")
+        }
+
     }
 
     const handleClose = ()=>{
