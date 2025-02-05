@@ -81,7 +81,7 @@ List: responsible for providing all the added items that will be transfered to <
         <>
             <Spinner></Spinner>
             <Container className = "mt-3">
-                <ItemRows  calculateTotal = {calculateTotal} chosenEmail = {chosenEmail} listItems = {listItems} listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation}></ItemRows>
+                <ItemRows calculateTotal = {calculateTotal} chosenEmail = {chosenEmail} listItems = {listItems} listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation}></ItemRows>
             </Container>
 
             <List total = {total} listConfirmation = {listConfirmation} handleListConfirmation = {handleListConfirmation} ></List>
@@ -107,7 +107,8 @@ const ItemRows = ({calculateTotal, chosenEmail, listItems, listConfirmation, han
         </Row> : 
         <Row className = "d-flex justify-content-center">
             <Col sm = {12}>
-            <img id = "nothing-logo" src = "http://localhost:8080/not-found.png" />
+            {/* <img id = "nothing-logo" src = "http://localhost:8080/not-found.png" /> */}
+            <img id = "nothing-logo" src = "https://shopping-app-backend-v1.onrender.com/not-found.png" />
             </Col>
             <Col sm = {12}>
             <h5 id = "nothing-text">It seems there is none yet</h5>
@@ -174,8 +175,7 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
                 console.log(tempList);
                 alert("Added to cart");
                 calculateTotal();
-            }
-            
+            }   
         }
         }
         
@@ -204,18 +204,16 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
             <Card style={{ width: '18rem' }} className = "mt-3">
         <Card.Img variant="top" src= {item.imageURI} alt = "No image " width = "286px" height = "286px" style = {{objectFit: "contain"}}/>
         {/* <Card.Img variant="top" src= "https://drive.google.com/thumbnail?id=1ymxIbnqcCuYb3GuFqIHTgcwhSsXl5rmZ" alt = "No image from drive" width = "286px" height = "286px" style = {{objectFit: "contain"}}/> */}
-        
-
-        <Card.Body>
-        <Card.Title>{item.name}</Card.Title>
-        <Card.Text>
-            {item.description}
-        </Card.Text>
-        <Card.Text>
-            {item.price}
-        </Card.Text>
-        </Card.Body>
-    </Card>
+            <Card.Body>
+                <Card.Title>{item.name}</Card.Title>
+                <Card.Text>
+                    {item.description}
+                </Card.Text>
+                <Card.Text>
+                    {item.price}
+                </Card.Text>
+            </Card.Body>
+        </Card>
         <Popup show = {show} handleClose = {handleClose} handleShow = {handleShow} item = {item} addToCart = {addToCart}></Popup>
         </Col>
         :

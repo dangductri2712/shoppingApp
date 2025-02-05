@@ -253,9 +253,10 @@ exports.updateUser = async (req,res)=>{
         console.log(previousUserInfo);
         const putBody = {
             name: req.body.name? req.body.name: previousUserInfo.name,
-            password: req.body.password? bcrypt.hash(req.body.password, 10) : previousUserInfo.password,
+            password: req.body.password? await bcrypt.hash(req.body.password, 10) : previousUserInfo.password,
             email: req.body.email? req.body.email: previousUserInfo.email
         }
+        console.log("New password is: "+ putBody.password);
         const updateDoc = {
             $set: putBody
         }
@@ -267,7 +268,7 @@ exports.updateUser = async (req,res)=>{
         }
         
         const currentUserInfo = await items.collection("users").findOne({userID: Number(req.params.uid)});
-        res.status(200).json(currentUserInfo);
+        res.status(200).send(currentUserInfo.password);
         
     }
     catch(err){

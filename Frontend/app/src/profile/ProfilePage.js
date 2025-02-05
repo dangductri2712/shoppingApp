@@ -4,6 +4,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import {useState, useEffect} from 'react';
 import axios from 'axios';
+import APIAccesser from '../APIAccesser';
 import './Profile.css';
 const ProfilePage = ({userInfo})=>{
     const [email, setEmail] = useState('unknown.email.com');
@@ -20,19 +21,30 @@ const ProfilePage = ({userInfo})=>{
             password: password
         }
 
-        await axios.put(`http://localhost:8080/user/${userId.toString()}`, putComponent)
-        .then(res=>{
+        // await axios.put(`http://localhost:8080/user/${userId.toString()}`, putComponent)
+        // .then(res=>{
+        //     alert("Successfully edited");
+        //     console.log(res.data)
+        //     //update the local storage with new email
+        //     localStorage.clear();
+        //     localStorage.setItem("userInfo", JSON.stringify({email: email, uid: userId}));
+
+        // })
+        // .catch(err=>{
+        //     console.log("Error with editing user profile info: "+ err);
+        //     alert("Error with editing user profile info");
+        // })
+        const result = await APIAccesser("user/"+userId.toString(), "PUT", putComponent);
+        if(result.status != 'failed'){
             alert("Successfully edited");
-            console.log(res.data)
+            console.log(result.data)
             //update the local storage with new email
             localStorage.clear();
             localStorage.setItem("userInfo", JSON.stringify({email: email, uid: userId}));
-
-        })
-        .catch(err=>{
-            console.log("Error with editing user profile info: "+ err);
-            alert("Error with editing user profile info");
-        })
+        }
+        else{
+            alert("Something wrong with editing profile: "+result.data);
+        }
     }
     return(
         <form onSubmit={handleSubmit}  className = "mx-auto">
@@ -58,7 +70,10 @@ const ProfilePage = ({userInfo})=>{
             <Col sm = "12">
                 <h5>New Password</h5>
                 <label className = "mb-3">
-                    <input type = "password" value = {password}onChange = {e=> setPassword(e.target.value)} ></input>
+                    <input type = "password" value = {password}onChange = {e=> {
+                        e.preventDefault();
+                        setPassword(e.target.value)
+                        }} ></input>
                 </label>
             </Col>
             <label className = "mb-3">

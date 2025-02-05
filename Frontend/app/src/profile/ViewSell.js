@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
+import APIAccesser from '../APIAccesser';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
@@ -15,17 +16,82 @@ const ViewSell = ()=>{
      * Purpose: To update the item you are selling 
      * @param {itemBody}: the body of the item that is meant to be updated 
      */
-    const updateItem = async (itemBody)=>{
+    const updateItem = async (itemBody, formData)=>{
         console.log(itemBody);
-        await axios.put("http://localhost:8080/items/"+itemBody.itemID, itemBody)
-        .then(res=>{
-            console.log(res.data.sold);
-            alert("Successfully edit the item");
-        })
-        .catch(err=>{
-            console.log("Error at updating item: "+ err);
-            alert("Having error at updating sell item. Please try again");
-        })
+        const fileId = itemBody.imageURI.substring(38, itemBody.imageURI.toString().length);
+        console.log(fileId);
+        const fileName = itemBody.name;
+        const updateBody = {
+            name: fileName,
+            fileId: fileId
+        }
+        formData.append("name", fileName);
+        formData.append("fileId", fileId);
+        //update the drive's image firs
+        console.log(formData.get("updateFile"));
+        if(formData.get("updateFile") == undefined || formData.get("updateFile") == null){  //if there is no picture to be updated, then just change the text in db
+            // await axios.put("http://localhost:8080/items/"+itemBody.itemID, itemBody)
+            // .then(res=>{
+            //     console.log(res.data.sold);
+            //     alert("Successfully edit the item");
+            // })
+            // .catch(err=>{
+            //     console.log("Error at updating item: "+ err);
+            //     alert("Having error at updating sell item. Please try again");
+            // })
+            const result = await APIAccesser("items/"+itemBody.itemID, "PUT", itemBody);
+            if(result.status != 'failed'){
+                console.log(result.data.sold);
+                alert("Successfully edit the item");
+            }
+            else{
+                console.log("Error at updating item: "+ result.data);
+                alert("Having error at updating sell item. Please try again");
+            }
+        }
+        else{
+            const updateFileFunc = await APIAccesser("upload", "PUT", formData);
+            if(updateFileFunc.status != 'failed'){
+                console.log(updateFileFunc.data);
+                alert("Update file successful");
+                itemBody.imageURI = updateFileFunc.data.imageURI;
+
+            //update the item inside the db
+                const result = await APIAccesser("items/"+itemBody.itemID, "PUT", itemBody);
+                if(result.status != 'failed'){
+                    console.log(result.data.sold);
+                    alert("Successfully edit the item");
+                }
+                else{
+                    console.log("Error at updating item: "+ result.data);
+                    alert("Having error at updating sell item. Please try again");
+                }
+            }
+            else{
+                alert("Having trouble at editing image file");
+                console.log(updateFileFunc.data);
+            }
+        //     await axios.put("http://localhost:8080/upload", formData)
+        // .then(async res=>{
+        //     console.log(res.data);
+        //     alert("Update file successful");
+        //     itemBody.imageURI = res.data.imageURI;
+
+        //     //update the item inside the db
+        //     const result = await APIAccesser("items/"+itemBody.itemID, "PUT", itemBody);
+        //     if(result.status != 'failed'){
+        //         console.log(result.data.sold);
+        //         alert("Successfully edit the item");
+        //     }
+        //     else{
+        //         console.log("Error at updating item: "+ result.data);
+        //         alert("Having error at updating sell item. Please try again");
+        //     }
+        // })
+        // .catch(err=>{
+        //     console.log(err);
+        // })
+        }
     }
     const getSellItems = async ()=>{
         if(JSON.parse((localStorage.userInfo)).uid == null){
@@ -33,16 +99,24 @@ const ViewSell = ()=>{
         }
         else{
             const uid = JSON.parse((localStorage.userInfo)).uid.toString();
-            await axios.get("http://localhost:8080/items/seller/"+uid)
-            .then(response=>{
-                console.log(response.data);
-                setSellItems(response.data);
-            })
-            .catch(err=>{
-                console.log(err);
+            // await axios.get("http://localhost:8080/items/seller/"+uid)
+            // .then(response=>{
+            //     console.log(response.data);
+            //     setSellItems(response.data);
+            // })
+            // .catch(err=>{
+            //     console.log(err);
+            //     alert("Problem viewing personal sold items");
+            // })
+            const result = await APIAccesser("items/seller/"+uid, "GET");
+            console.log(result.data);
+            if(result.status != 'failed'){
+                setSellItems(result.data);
+            }
+            else{
                 alert("Problem viewing personal sold items");
-            })
-        }
+            }
+        }   
     }
     useEffect(()=>{
         getSellItems();
@@ -77,7 +151,9 @@ const SellItemCard = ({item, updateItem})=>{
         price: itemPrice,
         location: itemLocation,
         description: itemDescription,
-        imageURI: "http://localhost:8080/"+ imageName.toString(),
+        //need to change this into a drive's link.
+        // imageURI: "http://localhost:8080/"+ imageName.toString(),
+        imageURI: "https://shopping-app-backend-v1.onrender.com"+ imageName.toString(),
         seller: (JSON.parse(localStorage.userInfo).uid).toString()
     };
 
@@ -90,21 +166,35 @@ const SellItemCard = ({item, updateItem})=>{
             price: itemPrice,
             location: itemLocation,
             description: itemDescription,
-            imageURI: "http://localhost:8080/"+ imageName.toString(),
+            // imageURI: "http://localhost:8080/"+ imageName.toString(),
+            imageURI: "https://shopping-app-backend-v1.onrender.com/"+ imageName.toString(),
             seller: (JSON.parse(localStorage.userInfo).uid).toString()
         };
     }, [imageName, itemSold])
 
     const handleSubmit = async (e)=>{
         const formData = new FormData();
+        let file = e.target.updateFile.files[0];
         e.preventDefault();
         var fileName = "";
-        if(e.target.uploadFile.files[0] == null){
-            fileName = item.imageURI.toString();
-        }
-        else{
-            fileName = "http://localhost:8080/"+e.target.uploadFile.files[0].name;
-        }
+        // if(e.target.updateFile.files[0] == null){  //if the updatedFile has nothing. So we use the old image URI
+        //     fileName = item.imageURI.toString();
+
+        // }
+        // else{  //if they choose some new image. Then replace it with the old one.
+        //     fileName = "http://localhost:8080/"+e.target.updateFile.files[0].name;
+        // }
+        fileName = item.imageURI.toString();
+        formData.append("updateFile", file);
+        // if(e.target.updateFile.files[0] != null){
+        //     const updateBody = {
+        //         name: itemName,
+        //         fileId: fileName
+        //     }
+
+        //     updateFile(updateBody);
+        // }
+        
         console.log(fileName);
         newItem = {
             sold: itemSold,
@@ -116,7 +206,7 @@ const SellItemCard = ({item, updateItem})=>{
             imageURI: fileName,
             seller: (JSON.parse(localStorage.userInfo).uid).toString()
         }
-        updateItem(newItem);
+        updateItem(newItem, formData);
     }
 
     const handleChange = (e)=>{
@@ -149,13 +239,12 @@ const SellItemCard = ({item, updateItem})=>{
             }
         
     }
-    
     return(
         <Col sm = {6}>
         <Card style={{ width: '18rem' }} className = "mt-3">
                 {
                     item.imageURI == undefined ?
-                    <Card.Img variant = "top" width = "286px" height = "151px" style = {{objectFit: "cover"}}src = "http://localhost:8080/unknown.jpg" alt = "No image"></Card.Img>
+                    <Card.Img variant = "top" width = "286px" height = "151px" style = {{objectFit: "cover"}}src = "https://shopping-app-backend-v1.onrender.comunknown.jpg" alt = "No image"></Card.Img>
                     :
                     <Card.Img variant="top" width = "286px" height = "286px" style = {{objectFit: "contain"}} src= {item.imageURI} alt = "No image " />
                 }
@@ -168,16 +257,16 @@ const SellItemCard = ({item, updateItem})=>{
                      <Card.Text>
                         Sold: {item.sold != null?  item.sold.toString():  false}
                     </Card.Text>
-                        <Card.Text>
-                    Description: {item.description}
-                </Card.Text>
-                <Card.Text>
-                    Price: {item.price}
-                </Card.Text>
-                <Card.Text>
-                    Seller: {item.seller}
-                </Card.Text>
-                    </>
+                    <Card.Text>
+                        Description: {item.description}
+                    </Card.Text>
+                    <Card.Text>
+                        Price: {item.price}
+                    </Card.Text>
+                    <Card.Text>
+                        Seller: {item.seller}
+                    </Card.Text>
+                </>
                     :
                     <form enctype = "multipart/form-data" onSubmit = {handleSubmit}>
                         <h5>
@@ -218,11 +307,10 @@ const SellItemCard = ({item, updateItem})=>{
                 
                 <h5>Select the Item's image</h5>
                 <label className = "mt-3">
-                    <input type = "file" name = "uploadFile" onChange = {handleChange}></input>
+                    <input type = "file" name = "updateFile" onChange = {handleChange}></input>
                 </label>
                         <button type = "submit">Submit</button>
                     </form>
-                    
                 }
                 {
                     editMode == true?

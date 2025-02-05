@@ -69,6 +69,9 @@ router.route('/user/history').post((req,res)=>{
 router.route('/upload').post((req,res)=>{
     Files.uploadFile(req,res);
 })
+.put((req,res)=>{
+    Files.updateFile(req,res)
+})
 
 
 module.exports = router;

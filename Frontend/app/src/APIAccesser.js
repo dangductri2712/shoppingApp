@@ -1,5 +1,5 @@
 import axios from "axios";
-async function APIAccesser(endpoint, method="", body={}){
+async function APIAccesser(endpoint, method="", body={}, others = {}){
     const domain = "http://localhost:8080/";
     console.log("Accessing API");
     console.log(endpoint)
@@ -14,11 +14,21 @@ async function APIAccesser(endpoint, method="", body={}){
             })
         }
         else if(method == "POST"){
-            await axios.post(domain+endpoint, body)
-            .then(res=>{
-                console.log(res.data);
-                result.data = res.data;
-            })
+            if(others == {}){
+                await axios.post(domain+endpoint, body)
+                .then(res=>{
+                    console.log(res.data);
+                    result.data = res.data;
+                })
+            }
+            else{
+                await axios.post(domain+endpoint, body, others)
+                .then(res=>{
+                    console.log(res.data);
+                    result.data = res.data;
+                })
+            }
+            
         }
          
         else if(method == "PUT"){
@@ -33,6 +43,7 @@ async function APIAccesser(endpoint, method="", body={}){
         result.status = "failed";
         result.data = err;
         console.log(err);
+        alert(err);
     }
     console.log(result);
     return result;

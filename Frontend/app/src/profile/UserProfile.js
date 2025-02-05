@@ -3,17 +3,18 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Header from '../Header.js';
-import axios from 'axios';
+// import axios from 'axios';
 import ItemHistory from '../ItemHistory.js';
 import {useState, useEffect, createRef} from 'react';
 import {findUserInfo} from '../findUserInfo.js';
 import ProfilePage from './ProfilePage.js';
 import ViewSell from './ViewSell.js';
+import APIAccesser from "../APIAccesser.js";
 import './Profile.css';
 const UserProfile = ()=>{
     
     const [selectedUser, setSelectedUser] = useState({name: "default", email: "email"});
-    const [historyPage,setHistoryPage] = useState(false);
+    const [historyPage,setHistoryPage] = useState(true);
     const [profilePage, setProfilePage] = useState(false);
     const [sellPage, setSellPage] = useState(false);
     const [viewSellPage, setViewSellPage] = useState(false);
@@ -48,7 +49,8 @@ const UserProfile = ()=>{
             <Col sm = {12} md = {3} id = "sideBar">
                 <Row >
                     <Col sm = {12}>
-                    <img src = "http://localhost:8080/account.jpg"></img>
+                    {/* <img src = "http://localhost:8080/account.jpg"></img> */}
+                    <img src = "https://shopping-app-backend-v1.onrender.com/account.jpg"></img>
                     </Col>
                     <Col sm = {12}>
                         <h3 className = "text-center" style = {{color: "#28D095"}}>{selectedUser.name}</h3>
@@ -81,6 +83,14 @@ const UserProfile = ()=>{
                         setPage(3);
                     }}>View & Edit Items</Button>
                 </div>
+                    </Col>
+                    <Col sm = {12}>
+                        <Button onClick = {()=>{
+                    //setLoggedIn(false);
+                        localStorage.clear();
+                        window.location.assign("/"); 
+                  }}>Sign out
+                </Button>
                     </Col>
                 </Row>
                 
@@ -146,20 +156,37 @@ const SellItemPage = ()=>{
         formData.append('uploadFile', file);
         // formData.append('fileName',e.target.uploadFile.files[0].name);
         var fileName = e.target.uploadFile.files[0].name;
-        await axios.post("http://localhost:8080/upload", formData, {
+        // await axios.post("http://localhost:8080/upload", formData, {
+        //     headers:{
+        //         'Content-Type': 'multipart/form-data'
+        //     }
+        // })
+        // .then(response=>{
+        //     alert("Send successfully");
+        //     console.log(response.data);
+        //     // setImageURI(response.data.imageURI);
+        //     imageURI = response.data.imageURI;
+        // })
+        // .catch(err=>{
+        //     alert("Error uploading files: "+err);
+        // });
+
+
+        const result = await APIAccesser("upload", "POST", formData, {
             headers:{
                 'Content-Type': 'multipart/form-data'
             }
         })
-        .then(response=>{
+
+        if(result.status != "failed"){
             alert("Send successfully");
-            console.log(response.data);
+            console.log(result.data);
             // setImageURI(response.data.imageURI);
-            imageURI = response.data.imageURI;
-        })
-        .catch(err=>{
-            alert("Error uploading files");
-        });
+            imageURI = result.data.imageURI;
+        }
+        else{
+            alert("Error at uploading image: "+ result.data);
+        }
 
         const newItem = {
             name: itemName,
@@ -172,15 +199,24 @@ const SellItemPage = ()=>{
         }
         if(imageURI != ""){
             console.log(newItem.imageURI);
-            await axios.post("http://localhost:8080/items", newItem)
-        .then(response=>{
-            console.log(response.data);
-        }
-        )
-        .catch(err=>{
-            console.log("Error at submitting new item's info: "+err);
-            alert("Please try to submit the new item to sell again");
-        });
+            // await axios.post("http://localhost:8080/items", newItem)
+            // .then(response=>{
+            //     console.log(response.data);
+            // }
+            // )
+            // .catch(err=>{
+            //     console.log("Error at submitting new item's info: "+err);
+            //     alert("Please try to submit the new item to sell again");
+            // });
+
+            const result = await APIAccesser("items", "POST", newItem);
+            if(result.status != "failed"){
+                console.log(result.data);
+            }
+            else{
+                console.log("Error at submitting new item's info: "+result.data);
+                alert("Please try to submit the new item to sell again");
+            }
         }
         else{
             alert("Error. image URI is not yet set");

@@ -14,10 +14,12 @@
 } */
 
 
-/* #account-button{
-  position: absolute;
-  right: 0px;
-} */
+#account-button{
+  /* position: absolute;
+  right: 0px; */
+  margin-right: auto;
+  margin-left: auto;
+}
 
 /* explanation of id and class:
 #nothing-logo: Used for the magnifying glass logo for when there is either no items in db or the items the customer search for is not there
@@ -34,7 +36,7 @@
 }
 
 .navigation-links{
-  margin-left: 100px;
+  margin-left: 80px;
   color: var(--even-background-color);
 }
 

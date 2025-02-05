@@ -52,25 +52,37 @@ function Header({user, loggedIn, setLoggedIn}) {
           <Nav className="me-auto text-white navigation-links">
             <Nav.Link className = "navigation-links" href="/">Home</Nav.Link>
             <Nav.Link className = "navigation-links"href="/items">Items</Nav.Link>
-          </Nav>
-          {
+            {
                 storedEmail != "" ?   //there is someone signing in already
-              <div id = "account-button"  >
-                  <Button className = "me-3"onClick = {()=>{
+              // <div id = "account-button item-center"  >
+                  
+                  <Nav.Link className = "me-3 navigation-links"onClick = {()=>{
                     window.location.assign("/profile");
-                  }}>Account</Button>
-
-                  <Button onClick = {()=>{
-                  setLoggedIn(false);
-                  localStorage.clear();
-                  window.location.assign("/"); 
-                  }}>Sign out
-                </Button>
-              </div>
+                  }}>Account</Nav.Link>
               
                :
                <Nav.Link className = "navigation-links"href="/login">Sign in</Nav.Link>  
           }
+          </Nav>
+          {/*
+                storedEmail != "" ?   //there is someone signing in already
+              <div id = "account-button item-center"  >
+                  
+                  <Button className = "me-3"onClick = {()=>{
+                    window.location.assign("/profile");
+                  }}>Account</Button>
+
+                  { <Button onClick = {()=>{
+                  setLoggedIn(false);
+                  localStorage.clear();
+                  window.location.assign("/"); 
+                  }}>Sign out
+                </Button> }
+              </div>
+              
+               :
+               <Nav.Link className = "navigation-links"href="/login">Sign in</Nav.Link>  
+          */}
         </Navbar.Collapse>
       </Container>
     </Navbar>

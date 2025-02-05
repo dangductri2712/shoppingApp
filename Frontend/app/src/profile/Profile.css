@@ -24,9 +24,9 @@
 }
 
 
-@media only screen and (max-width: 672px){
+@media only screen and (max-width: 730px){
     #sideBar{
         background-color: black;
-        height: 50vh;
+        height: 65vh;
     }
 }
