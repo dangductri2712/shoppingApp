@@ -8,7 +8,7 @@ function Spinner() {
       <Carousel.Item>
       <div>
         {/* <img className="d-block carousel-image" src="http://localhost:8080/carousel_1.jpg" alt="Image One" /> */}
-        <img className="d-block carousel-image" src="https://shopping-app-backend-v1.onrender.comcarousel_1.jpg" alt="Image One" />
+        <img className="d-block carousel-image" src="https://backend-version1-4.onrender.com/carousel_1.jpg" alt="Image One" />
         <div className = "image-description mx-auto my-auto" >
           
         </div>    
@@ -18,7 +18,7 @@ function Spinner() {
       <Carousel.Item>
       <div>
         {/* <img className="d-block carousel-image" src="http://localhost:8080/carousel_2.png" alt="Image Two" /> */}
-        <img className="d-block carousel-image" src="https://shopping-app-backend-v1.onrender.com/carousel_2.png" alt="Image Two" />
+        <img className="d-block carousel-image" src="https://backend-version1-4.onrender.com/carousel_2.png" alt="Image Two" />
         <div className = "image-description mx-auto my-auto" >
           
         </div>    
@@ -28,7 +28,7 @@ function Spinner() {
       <Carousel.Item className = "row">
       <div>
         {/* <img className="d-block carousel-image" src="http://localhost:8080/carousel_3.jpg" alt="Image Three" /> */}
-        <img className="d-block carousel-image" src="https://shopping-app-backend-v1.onrender.com/carousel_3.jpg" alt="Image Three" />
+        <img className="d-block carousel-image" src="https://backend-version1-4.onrender.com/carousel_3.jpg" alt="Image Three" />
         <div className = "image-description mx-auto my-auto" >
           
         </div>    

@@ -109,7 +109,7 @@ const ItemRows = ({calculateTotal, chosenEmail, listItems, listConfirmation, han
         <Row className = "d-flex justify-content-center">
             <Col sm = {12}>
             {/* <img id = "nothing-logo" src = "http://localhost:8080/not-found.png" /> */}
-            <img id = "nothing-logo" src = "https://shopping-app-backend-v1.onrender.com/not-found.png" />
+            <img id = "nothing-logo" src = "https://backend-version1-4.onrender.com/not-found.png" />
             </Col>
             <Col sm = {12}>
             <h5 id = "nothing-text">It seems there is none yet</h5>

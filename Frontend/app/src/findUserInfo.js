@@ -1,7 +1,7 @@
 import axios from 'axios';
 export async function findUserInfo(uid){
     var selectedUser = {};
-    await axios.get(`http://localhost:8080/user/${uid}`)
+    await axios.get(`https://backend-version1-4.onrender.com/user/${uid}`)
     .then(res=>{
         console.log(res.data);
         selectedUser = res.data;

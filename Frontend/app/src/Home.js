@@ -27,7 +27,7 @@ function Home() {
       <Row>
         <Col xs = {12} sm = {12} lg = {6}>
           <div id = "intro_img">
-            <img src = "http://localhost:8080/main_page.jpg"  id = "homeImage" ></img>
+            <img src = "https://backend-version1-4.onrender.com/main_page.jpg"  id = "homeImage" ></img>
           </div>
         </Col>
         <Col xs = {12} sm = {12} lg = {6}>
@@ -59,7 +59,7 @@ function Home() {
       <Row id = "bottom_cards" className = "mx-auto">
         <Col lg = {4}>
           <Card style={{ width: '18rem' , marginTop: "50px"}}>
-          <Card.Img variant="top" src= "http://localhost:8080/account.jpg" alt = "No image " />
+          <Card.Img variant="top" src= "https://backend-version1-4.onrender.com/account.jpg" alt = "No image " />
           <Card.Body>
             <Card.Title>Explore items</Card.Title>
             <Card.Text>
