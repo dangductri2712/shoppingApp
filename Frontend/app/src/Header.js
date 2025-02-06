@@ -41,7 +41,8 @@ function Header({user, loggedIn, setLoggedIn}) {
         <Navbar.Brand href="">
         <img
               alt=""
-              src="http://localhost:8080/logo.jpg"
+              // src="http://localhost:8080/logo.jpg"
+              src = "https://shopping-app-backend-v1.onrender.com/logo.jpg"
               width="30px"
               height="30px"
               className="d-inline-block align-top App-logo"

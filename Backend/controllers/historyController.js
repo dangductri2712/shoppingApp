@@ -41,3 +41,23 @@ exports.viewHistory = async(req,res)=>{
         res.status(500).send("Can not get the history of this user");
     }
 }
+
+exports.viewItemHistory = async (req,res)=>{
+    console.log("Finding all buyer for this item");
+    const allHistory = await items.collection("history").find({itemID: req.params.itemID}, {seller: req.params.itemID}).sort({buyDate: -1}).toArray(function(err,result){
+        if(err){
+            console.log(err);
+            res.status(500).send("Can not trace all buyers for this product");
+        }
+    })
+    const tempHistory = allHistory;
+    for(var i =0; i< allHistory.length; i++){
+        await axios.get("http://localhost:8080/user/"+ tempHistory[i].buyer)
+        .then(response=>{
+            console.log(response.data.name);
+            tempHistory[i].buyerName = response.data.name;
+            tempHistory[i].buyerEmail = response.data.email;
+        })
+    }
+    res.status(200).send(tempHistory);
+}

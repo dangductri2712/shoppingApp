@@ -2,7 +2,7 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import axios from 'axios';
-
+import APIAccesser from './APIAccesser';
 
 import {useState, useEffect} from 'react';
 import './History.css';
@@ -12,13 +12,23 @@ const ItemHistory = ()=>{
         console.log(JSON.parse(localStorage.userInfo).email);
         await axios.get("http://localhost:8080/user/history/"+ JSON.parse(localStorage.userInfo).uid.toString())
         .then(async res=>{
-            console.log("Here is the history");
-            console.log(res.data);
-            setHistory(res.data);
+            
         })
         .catch(err=>{
             console.log(err);
         })
+        if(JSON.parse(localStorage.userInfo).uid.toString() != null || JSON.parse(localStorage.userInfo).uid.toString() != undefined){
+            const result = await APIAccesser("user/history/"+JSON.parse);
+            if(result.status == "success"){
+                console.log("Here is the history");
+            console.log(result.data);
+            setHistory(result.data);
+            }
+            else{
+                console.log(result.data);
+            }
+        }
+        
     }
     useEffect(()=>{
         getHistory();

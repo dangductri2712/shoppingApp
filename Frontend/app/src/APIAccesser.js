@@ -1,6 +1,6 @@
 import axios from "axios";
 async function APIAccesser(endpoint, method="", body={}, others = {}){
-    const domain = "http://localhost:8080/";
+    const domain = "https://shopping-app-backend-v1.onrender.com/";
     console.log("Accessing API");
     console.log(endpoint)
     let result = {data: "", status: "success"};

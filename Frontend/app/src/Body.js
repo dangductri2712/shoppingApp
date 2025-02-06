@@ -43,6 +43,7 @@ List: responsible for providing all the added items that will be transfered to <
     const getItems = async()=>{
         var result = await APIAccesser("items", "GET");
         if(result.status != "failed"){
+
             setListItems(result.data);      
         }
         else{
@@ -141,11 +142,12 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
                 alert("Can not define this item. Please try again");
             }
             else{
-                var addedObject = {name: addedItem.name, price: addedItem.price, amount: 1, seller: addedItem.seller, imageURI: addedItem.imageURI};
+                var addedObject = {itemID: addedItem.itemID, name: addedItem.name, price: addedItem.price, amount: 1, seller: addedItem.seller, imageURI: addedItem.imageURI};
                 var tempList = listConfirmation;
                 if(tempList.length == 0){
                     addedObject.amount = 1;
                     tempList.push(addedObject);
+                    console.log("tempList: "+tempList);
                     handleListConfirmation(tempList);
                 }
                 else{   //if the list already have some items in there
@@ -159,6 +161,7 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
                             tempAmount = tempList[i].amount + 1;
                             tempList[i].amount = tempAmount;
                             tempList[i].imageURI = addedObject.imageURI;
+                            console.log("tempList: "+tempList);
                             handleListConfirmation(tempList);
                             break;
                         }
@@ -324,7 +327,9 @@ const List = ({total,listConfirmation, handleListConfirmation})=>{
     const handleConfirmPurchase = async ()=>{
         const historyPostBody = [];
         for(var i=0; i< listConfirmation.length; i++){
+            console.log(listConfirmation[i].itemID);
             historyPostBody.push({
+                itemID: listConfirmation[i].itemID,
                 itemName: listConfirmation[i].name,
                 price: listConfirmation[i].price,
                 seller: listConfirmation[i].seller,
@@ -345,6 +350,7 @@ const List = ({total,listConfirmation, handleListConfirmation})=>{
         const result = await APIAccesser("user/history", "POST", historyPostBody);
         if(result.status != "failed"){
             alert("Purchase completed. Congratulation");
+            window.location.reload();
         }
         else{
             console.log("Error at storing history: "+result.data);

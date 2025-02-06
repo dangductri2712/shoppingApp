@@ -55,6 +55,10 @@ router.route('/user/history/:uid').get((req,res)=>{
     History.viewHistory(req,res);
 })
 
+router.route('/user/history/:uid/:itemID').get((req,res)=>{
+    History.viewItemHistory(req,res);
+})
+
 router.route('/user/history').post((req,res)=>{
     History.insertHistory(req,res);
 })

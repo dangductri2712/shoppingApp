@@ -51,6 +51,7 @@ const UserProfile = ()=>{
                     <Col sm = {12}>
                     {/* <img src = "http://localhost:8080/account.jpg"></img> */}
                     <img src = "https://shopping-app-backend-v1.onrender.com/account.jpg"></img>
+                    {/* <img src = "https://drive.google.com/uc?id=12gEe_yoAYdCRfJyP7HlT2HYsn5jH9O7a&export=download"></img> */}
                     </Col>
                     <Col sm = {12}>
                         <h3 className = "text-center" style = {{color: "#28D095"}}>{selectedUser.name}</h3>

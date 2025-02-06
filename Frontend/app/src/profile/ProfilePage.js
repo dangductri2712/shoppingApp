@@ -47,11 +47,17 @@ const ProfilePage = ({userInfo})=>{
         }
     }
     return(
-        <form onSubmit={handleSubmit}  className = "mx-auto">
+        <Row>
+            <Col sm = {12}>
+                <Buyer></Buyer>
+            </Col>
+            <Col sm = {12}>
+            <h3>Edit profile</h3>
+            <form onSubmit={handleSubmit}  className = "mx-auto">
             <Card style={{ width: '18rem' }} className = "mt-3">
         <Card.Img variant="top" src= "http://localhost:8080/account.jpg" alt = "No image " />
         <Card.Body>
-        <Card.Title>Edit profile</Card.Title>
+        {/* <Card.Title>Edit profile</Card.Title> */}
         <Card.Text>
         
         <Row className = "justify-content-center" id = "profile">
@@ -85,9 +91,115 @@ const ProfilePage = ({userInfo})=>{
         
         </Card.Body>
     </Card>
-        </form>
+        </form>        
+            </Col>
+            
+            
+        </Row>
         
+    )
+}
 
+const Buyer = ()=>{
+    const userID = JSON.parse(localStorage.userInfo).uid;
+    const [buyers, setBuyers] = useState([]);
+    const getBuyers = async()=>{
+        const sellItems = await APIAccesser(`items/seller/${userID}`, "GET");
+        const buyers = [];
+        if(sellItems.status == "success"){
+            console.log("Begin getting buyers");
+            for(var i = 0; i< sellItems.data.length; i++){
+                var item = sellItems.data[i];
+                console.log(`user/history/${userID}/${item.itemID}`);
+                const buyer = await APIAccesser(`user/history/${userID}/${item.itemID}`, "GET");
+                
+                console.log(`user/history/${userID}/${item.itemID}`);
+                if(buyer.status != 'failed'){
+                    console.log(buyer.data);
+                    buyers.push(buyer.data);
+                }
+            }
+            console.log(buyers);
+            setBuyers(buyers);
+        }
+        else{
+            console.log("failed at getting buyers");
+            alert("failed at getting buyers");
+        }
+    
+        
+    }
+    useEffect(()=>{
+        getBuyers();
+    }, [])
+
+    useEffect(()=>{
+        console.log(buyers);
+    }, [buyers])
+    return(
+        <>
+            <h3>List of buyers</h3>
+            <table className = "table">
+            <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Item
+            </th>
+            <th>
+                Buy Date
+            </th>
+            </tr>
+            
+            {
+            buyers.length > 0
+                ?
+                <>
+                    {
+                        buyers.map(buyer=>{
+                            return(
+                                <HistoryRow buyer  = {buyer}></HistoryRow>
+                            )
+                        })
+                    }
+                </>
+                :
+                <p> 
+                    There seems to be nothing yet
+                </p>
+            }
+        
+        </table>
+        </>
+        
+            
+        
+    )
+}
+
+const HistoryRow = ({buyer})=>{  //buyer is an array
+    return(
+        <>
+            {
+                buyer.map(b=>{
+                    console.log(b);
+                    return(
+                        <tr>
+                <td>{b.buyerName}</td>
+                <td>{b.buyerEmail}</td>
+                <td>{b.itemName}</td>
+                <td>{b.buyDate.substring(0,10)}</td>
+            </tr>
+                    )
+                    
+                })
+                
+            }
+        </>
         
     )
 }

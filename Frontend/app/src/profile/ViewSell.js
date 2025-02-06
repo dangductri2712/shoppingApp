@@ -21,10 +21,6 @@ const ViewSell = ()=>{
         const fileId = itemBody.imageURI.substring(38, itemBody.imageURI.toString().length);
         console.log(fileId);
         const fileName = itemBody.name;
-        const updateBody = {
-            name: fileName,
-            fileId: fileId
-        }
         formData.append("name", fileName);
         formData.append("fileId", fileId);
         //update the drive's image firs
@@ -49,7 +45,7 @@ const ViewSell = ()=>{
                 alert("Having error at updating sell item. Please try again");
             }
         }
-        else{
+        else if(formData.get("updateFile") != null && formData.get("updateFile")!=undefined){
             const updateFileFunc = await APIAccesser("upload", "PUT", formData);
             if(updateFileFunc.status != 'failed'){
                 console.log(updateFileFunc.data);
