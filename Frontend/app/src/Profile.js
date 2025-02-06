@@ -100,7 +100,7 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
             //     alert("Something is wrong. Please check again");
             //     console.log(err);
             // })
-            const result = APIAccesser("users/login", "POST", postBody);
+            const result = await APIAccesser("users/login", "POST", postBody);
             if(result.data != "failed"){
               console.log(result.data.user);
               alert("Authentication correct");

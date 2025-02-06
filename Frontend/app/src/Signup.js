@@ -3,6 +3,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Header from './Header';
+import APIAccesser from './APIAccesser';
 import './Signup.css';
 const {useState, useEffect} = require("react");
 
@@ -25,47 +26,59 @@ const Signup = ({loggedIn, setLoggedIn})=>{
 
     const handleSubmit = async (e)=>{
       e.preventDefault();
-      await axios.post("http://localhost:8080/users/signup", {
-          name: name,
-          email: email,
-          password: password
-      })
-      .then((result)=>{
-          alert("Successfully create new login");
+      // await axios.post("http://localhost:8080/users/signup", {
+      //     name: name,
+      //     email: email,
+      //     password: password
+      // })
+      // .then((result)=>{
+      //     alert("Successfully create new login");
+      //     // setLoggedIn(true);
+      //     window.location.assign("/login");
+
+      // })
+      // .catch(err=>{
+      //     alert("Something is wrong. Please check again");
+      
+      // }
+
+      const result = await APIAccesser("users/signup", "POST", {
+        name: name,
+        email: email,
+        password: password
+    });
+      if(result.status == "success"){
+        alert("Successfully create new login");
           // setLoggedIn(true);
           window.location.assign("/login");
-
-      })
-      .catch(err=>{
-          alert("Something is wrong. Please check again");
-      
       }
-    )
+      else{
+        alert("Something is wrong. Please check again");
+      }
   }
     return(
         <>
           <Card id = "inputCard" style={{ width: '20rem'}} className = "mt-3 mx-auto">
-        <Card.Img variant="top" src= "http://localhost:8080/account.jpg" alt = "No image " />
+        <Card.Img variant="top" src= "https://backend-version1-4.onrender.com/account.jpg" alt = "No image " />
         <Card.Body className = "cardBody">
         <form  style = {{position: "relative"}} onSubmit={async (e)=>{
-          // handleSubmit();
-          e.preventDefault();
-          await axios.post("http://localhost:8080/users/signup", {
-            name: name,
-            email: email,
-            password: password
-          })
-          .then((result)=>{
-              alert("Successfully create new login");
-              // setLoggedIn(true);
-              window.location.assign("/login");
+          await handleSubmit();
+          // e.preventDefault();
+          // await axios.post("http://localhost:8080/users/signup", {
+          //   name: name,
+          //   email: email,
+          //   password: password
+          // })
+          // .then((result)=>{
+          //     alert("Successfully create new login");
+          //     // setLoggedIn(true);
+          //     window.location.assign("/login");
 
-          })
-          .catch(err=>{
-              alert("Something is wrong. Please check again");
+          // })
+          // .catch(err=>{
+          //     alert("Something is wrong. Please check again");
           
-          }
-    )
+          // })
         }}>
         <Row>
         <Col>
