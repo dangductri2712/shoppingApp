@@ -55,7 +55,7 @@ const ProfilePage = ({userInfo})=>{
             <h3>Edit profile</h3>
             <form onSubmit={handleSubmit}  className = "mx-auto">
             <Card style={{ width: '18rem' }} className = "mt-3">
-        <Card.Img variant="top" src= "http://localhost:8080/account.jpg" alt = "No image " />
+        <Card.Img variant="top" src= "https://backend-version1-4.onrender.com/account.jpg" alt = "No image " />
         <Card.Body>
         {/* <Card.Title>Edit profile</Card.Title> */}
         <Card.Text>
