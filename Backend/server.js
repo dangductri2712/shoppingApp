@@ -21,7 +21,7 @@ const s3 = new AWS.S3();
 // // const s3Client = new S3Client();
 // const bucketName = 'tri-shopping-items';
 var corsOptions = {
-    origin: "http://localhost:3000"
+    origin: "https://shopping-app-zu12.onrender.com"
 }
 app.use(cors(corsOptions));
 app.use(express.urlencoded({extended:false}));
