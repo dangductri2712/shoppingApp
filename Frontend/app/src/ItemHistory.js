@@ -20,11 +20,11 @@ const ItemHistory = ()=>{
 
 
         if(JSON.parse(localStorage.userInfo).uid.toString() != null || JSON.parse(localStorage.userInfo).uid.toString() != undefined){
-            const result = await APIAccesser("user/history/"+JSON.parse);
+            const result = await APIAccesser("user/history/"+JSON.parse(localStorage.userInfo).uid.toString());
             if(result.status == "success"){
                 console.log("Here is the history");
                 console.log(result.data);
-            setHistory(result.data);
+                setHistory(result.data);
             }
             else{
                 console.log(result.data);
