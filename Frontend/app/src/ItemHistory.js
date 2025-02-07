@@ -10,18 +10,20 @@ const ItemHistory = ()=>{
     const [history, setHistory] = useState([{itemName: "unknown", price: "unknown", seller: "unknown"}]);
     const getHistory = async()=>{
         console.log(JSON.parse(localStorage.userInfo).email);
-        await axios.get("http://localhost:8080/user/history/"+ JSON.parse(localStorage.userInfo).uid.toString())
-        .then(async res=>{
+        // await axios.get("http://localhost:8080/user/history/"+ JSON.parse(localStorage.userInfo).uid.toString())
+        // .then(async res=>{
             
-        })
-        .catch(err=>{
-            console.log(err);
-        })
+        // })
+        // .catch(err=>{
+        //     console.log(err);
+        // })
+
+
         if(JSON.parse(localStorage.userInfo).uid.toString() != null || JSON.parse(localStorage.userInfo).uid.toString() != undefined){
             const result = await APIAccesser("user/history/"+JSON.parse);
             if(result.status == "success"){
                 console.log("Here is the history");
-            console.log(result.data);
+                console.log(result.data);
             setHistory(result.data);
             }
             else{
