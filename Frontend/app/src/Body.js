@@ -204,9 +204,9 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
         {
             item.sold == false || item.sold == null?
             <Col lg = {4}>
-            <Card style={{ width: '18rem' }} className = "mt-3">
-        <Card.Img variant="top" src= {item.imageURI} alt = "No image " width = "286px" height = "286px" style = {{objectFit: "contain"}}/>
-        {/* <Card.Img variant="top" src= "https://drive.google.com/thumbnail?id=1ymxIbnqcCuYb3GuFqIHTgcwhSsXl5rmZ" alt = "No image from drive" width = "286px" height = "286px" style = {{objectFit: "contain"}}/> */}
+            <Card   style={{ width: '18rem' }} className = "mt-3 itemCard">
+        <Card.Img variant="top" src= {item.imageURI+ "&timestamp="+ new Date().getTime()} alt = "No image " width = "286px" height = "286px" style = {{objectFit: "contain"}}/>
+        {/* <Card.Img variant="top" src= "https://drive.google.com/file/d/12gEe_yoAYdCRfJyP7HlT2HYsn5jH9O7a&export=view&authuser=0/preview" alt = "No image from drive" width = "286px" height = "286px" style = {{objectFit: "contain"}}/> */}
             <Card.Body>
                 <Card.Title>{item.name}</Card.Title>
                 <Card.Text>
@@ -336,7 +336,8 @@ const List = ({total,listConfirmation, handleListConfirmation})=>{
                 buyer: JSON.parse(localStorage.userInfo).uid.toString(),
                 buyDate: new Date(), 
                 imageURI: listConfirmation[i].imageURI, 
-                amount: listConfirmation[i].amount
+                amount: listConfirmation[i].amount,
+                status: "In progress"
             })
         }
         // await axios.post("http://localhost:8080/user/history/", historyPostBody)

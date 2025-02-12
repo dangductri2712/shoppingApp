@@ -12,10 +12,9 @@ function App(){
   const [user, setUser] = useState({name: "default", email: "default"});
   var data = {};
   const changeUser = (userID)=>{
-    alert("userID.name: "+userID.name);
+    // alert("userID.name: "+userID.name);
     data = {...userID};
     setUser(data);
-    alert(data);
   }
   useEffect(()=>{
     console.log("App.js");

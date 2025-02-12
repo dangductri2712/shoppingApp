@@ -23,7 +23,7 @@ const ViewSell = ()=>{
         const fileName = itemBody.name;
         formData.append("name", fileName);
         formData.append("fileId", fileId);
-        //update the drive's image firs
+        //update the drive's image first
         console.log(formData.get("updateFile"));
         if(formData.get("updateFile") == undefined || formData.get("updateFile") == null){  //if there is no picture to be updated, then just change the text in db
             // await axios.put("http://localhost:8080/items/"+itemBody.itemID, itemBody)
@@ -180,7 +180,23 @@ const SellItemCard = ({item, updateItem})=>{
         // else{  //if they choose some new image. Then replace it with the old one.
         //     fileName = "http://localhost:8080/"+e.target.updateFile.files[0].name;
         // }
+       
         fileName = item.imageURI.toString();
+        // if(!fileName.includes("&timestamp=")){   //then update a new time and date
+        //     fileName = item.imageURI.toString()+ "&timestamp="+new Date().getTime();
+        // }
+        // else{  //if it does include time stamp, then remake a new time stamp
+        //     var indexOfTimeStamp = fileName.indexOf("&timeStamp=");
+        //     var firstHalf = fileName.substring(0,indexOfTimeStamp);
+        //     var secondHalf= "&timeStamp="+ new Date().getTime();
+        //     fileName = firstHalf+secondHalf;
+        // }
+        var indexOfTimeStamp = fileName.indexOf("&timeStamp=");
+        var firstHalf = fileName.substring(0,indexOfTimeStamp);
+        var secondHalf= "&timeStamp="+ new Date().getTime();
+        // fileName = firstHalf+secondHalf;
+        console.log(fileName);
+        console.log("New file URI: "+firstHalf+secondHalf);
         formData.append("updateFile", file);
         // if(e.target.updateFile.files[0] != null){
         //     const updateBody = {

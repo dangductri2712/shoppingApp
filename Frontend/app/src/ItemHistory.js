@@ -3,9 +3,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import axios from 'axios';
 import APIAccesser from './APIAccesser';
-
 import {useState, useEffect} from 'react';
 import './History.css';
+import NavItem from 'react-bootstrap/esm/NavItem';
 const ItemHistory = ()=>{
     const [history, setHistory] = useState([{itemName: "unknown", price: "unknown", seller: "unknown"}]);
     const getHistory = async()=>{
@@ -45,25 +45,21 @@ const ItemHistory = ()=>{
                 history.map(item=>{
                     console.log(item);
                     return(
-                    <Col sm = {4}>
+                    <Col sm = {6} md = {6} lg = {4}>
                         <Card style={{ width: '18rem' }} className = "mt-3">
                             {
                                 item.imageURI == undefined ?
-                                <Card.Img variant = "top" src = "http://localhost:8080/unknown.jpg" alt = "No image"></Card.Img>
+                                <Card.Img variant = "top" src = "https://backend-version1-4.onrender.com/unknown.jpg" alt = "No image"></Card.Img>
                                 :
                                 <Card.Img variant="top" src= {item.imageURI} alt = "No image " />
                             }
-                            
                             <Card.Body>
                                 <Card.Title>{item.itemName}</Card.Title>
-                                <Card.Text>
-                                    Description: {item.description}
-                                </Card.Text>
                                 <Card.Text>
                                     Price: {item.price}
                                 </Card.Text>
                                 <Card.Text>
-                                    Seller: {item.seller}
+                                    Seller: {item.sellerName}
                                 </Card.Text>
                                 <Card.Text>
                                     Bought on: {item.buyDate} 
@@ -71,6 +67,29 @@ const ItemHistory = ()=>{
                                 <Card.Text>
                                     Amount: {item.amount == null? 1: item.amount}
                                 </Card.Text>
+                                {
+                                    item.status != "bought" ?
+                                    <button onClick = {
+                                        async ()=>{
+                                            const updateBody = item;
+
+                                            updateBody.status = "bought";
+                                            console.log(updateBody);
+                                            const updateStatus = await APIAccesser("user/history/"+updateBody.hid, "PUT", item);
+                                            if(updateStatus.status != "failed"){
+                                                alert("Update completed");
+                                                console.log(updateStatus);
+                                                
+                                            }
+                                            else{
+                                                alert("Can not update this status. Please try again later");
+                                                console.log(updateStatus.data);
+                                            }
+                                        }
+                                    }>Set to bought</button>
+                                    : 
+                                    <p>Status: <span style = {{color: "white", backgroundColor: "green"}}>Bought</span></p>
+                                    }
                             </Card.Body>
                         </Card>
                     </Col>
@@ -78,8 +97,9 @@ const ItemHistory = ()=>{
                     )
                 })
             }
-          
+
             </Row>
+            
             :
            <p>No history of purchase yet</p>
            }

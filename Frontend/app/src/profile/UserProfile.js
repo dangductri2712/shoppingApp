@@ -57,35 +57,37 @@ const UserProfile = ()=>{
                         <h3 className = "text-center" style = {{color: "#28D095"}}>{selectedUser.name}</h3>
                     </Col>
                     <Col sm = {12} >
-                        <div id = "historyTab" >
-                            <Button className = "item-center mb-3 mx-auto"onClick = {()=>{
-                                setPage(0);
-                            }}>History of purchase</Button>
+                        <Row>
+                        <Col sm = {4} md = {12} lg = {12}> 
+                            <div id = "historyTab" >
+                                <Button className = "item-center mb-3 mx-auto"onClick = {()=>{
+                                    setPage(0);
+                                }}>History</Button>
+                            </div>
+                        </Col>
+                        <Col sm = {4} md = {12} lg = {12}>
+                            <div id = "profileTab">
+                                <Button className = "item-center mb-3"onClick = {()=>{
+                                    setPage(1);
+                                }}>Profile</Button>
+                            </div>
+                    </Col>
+                    <Col sm = {4} md = {12} lg = {12}>
+                        <div id = "sellItemTab">
+                            <Button className = "item-center mb-3"onClick = {()=>{
+                                setPage(2);
+                            }}>Sell Items</Button>
                         </div>
                     </Col>
-                    <Col sm = {12}>
-                    <div id = "profileTab">
-                    <Button className = "item-center mb-3"onClick = {()=>{
-                        setPage(1);
-                    }}>Profile</Button>
-                </div>
-                    </Col>
-                    <Col sm = {12}>
-                    <div id = "sellItemTab">
-                    <Button className = "item-center mb-3"onClick = {()=>{
-                        setPage(2);
-                    }}>Sell Items</Button>
-                </div>
-                    </Col>
 
-                    <Col sm = {12}>
-                    <div id = "viewSellItemTab">
-                    <Button className = "item-center mb-3"onClick = {()=>{
-                        setPage(3);
-                    }}>View & Edit Items</Button>
-                </div>
+                    <Col sm = {4} md = {12} lg = {12}>
+                        <div id = "viewSellItemTab">
+                        <Button className = "item-center mb-3"onClick = {()=>{
+                            setPage(3);
+                        }}>Edit Items</Button>
+                        </div>
                     </Col>
-                    <Col sm = {12}>
+                    <Col sm = {4} md = {12} lg = {12}>
                         <Button onClick = {()=>{
                     //setLoggedIn(false);
                         localStorage.clear();
@@ -93,6 +95,10 @@ const UserProfile = ()=>{
                   }}>Sign out
                 </Button>
                     </Col>
+                        </Row>
+                       
+                    </Col>
+                    
                 </Row>
                 
                

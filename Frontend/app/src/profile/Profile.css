@@ -30,3 +30,9 @@
         height: 65vh;
     }
 }
+@media only screen and (min-width: 730px) and (max-width: 760px){
+    #sideBar{
+        background-color: black;
+        height: 50vh;
+    }
+}

@@ -45,7 +45,7 @@ exports.insertItem = async (req,res)=> {
         description: req.body.description != null? req.body.description : "unknown",
         price: req.body.price != null? req.body.price : "unknown",
         itemID: newID.toString(),
-        imageURI: req.body.imageURI != null ? req.body.imageURI : "http://localhost:8080/unknown.jpg",
+        imageURI: req.body.imageURI != null ? req.body.imageURI : "https://backend-version1-4.onrender.com/unknown.jpg",
         itemLocation: req.body.location,
         seller: req.body.seller != null? req.body.seller : "0"
     }
@@ -69,7 +69,7 @@ exports.updateItem = async (req,res)=> {
             price: req.body.price != null? req.body.price : "unknown",
             itemID: itemID,
             sold: req.body.sold != null? req.body.sold : true ,
-            imageURI: req.body.imageURI != null? req.body.imageURI : "http://localhost:8080/unknown.png"
+            imageURI: req.body.imageURI != null? req.body.imageURI : "https://backend-version1-4.onrender.com/unknown.jpg"
         }
     }
     try{

@@ -93,8 +93,6 @@ const ProfilePage = ({userInfo})=>{
     </Card>
         </form>        
             </Col>
-            
-            
         </Row>
         
     )
@@ -154,16 +152,22 @@ const Buyer = ()=>{
                 Buy Date
             </th>
             </tr>
-            
             {
-            buyers.length > 0
+            buyers.length > 0 
                 ?
                 <>
                     {
                         buyers.map(buyer=>{
-                            return(
-                                <HistoryRow buyer  = {buyer}></HistoryRow>
-                            )
+                                console.log(buyer);
+                                
+                                return(
+                                    <HistoryRow buyer  = {buyer}></HistoryRow>
+                                )   
+                                
+                            
+                            // return(
+                            //     <HistoryRow buyer  = {buyer}></HistoryRow>
+                            // )
                         })
                     }
                 </>

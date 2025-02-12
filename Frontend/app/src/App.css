@@ -8,6 +8,11 @@
   text-align: center;
 }
 
+.itemCard:hover {
+    transform: scale(1.05);
+    border-style: solid;
+    border-color: var(--odd-background-color);
+}
 /* .App-logo {
   height: 10vmin;
   pointer-events: none;
