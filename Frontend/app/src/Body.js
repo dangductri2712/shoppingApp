@@ -164,8 +164,9 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
                             identical = true;
                             
                             tempAmount = tempList[i].amount + 1;
-                            if(tempAmount < tempList[i].total){
+                            if(tempAmount <= tempList[i].total){
                                 tempList[i].amount = tempAmount;
+                                alert("Added to cart");
                             }
                             else{
                                 alert("It is already the maximum this item is sold for: "+tempList[i].total);
@@ -186,7 +187,7 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
                     }
                 }
                 console.log(tempList);
-                // alert("Added to cart");
+                
                 calculateTotal();
             }   
         }
