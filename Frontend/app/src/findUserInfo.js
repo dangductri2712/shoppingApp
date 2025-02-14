@@ -10,6 +10,7 @@ export async function findUserInfo(uid){
         console.log("Something wrong at findUserInfo.js: "+err);
     })
 
+
     return selectedUser;
 }
 

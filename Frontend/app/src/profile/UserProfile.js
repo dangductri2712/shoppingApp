@@ -23,7 +23,8 @@ const UserProfile = ()=>{
     const getUserInfo = async ()=>{
         
         console.log("userInfo: "+userInfo);
-        const tempUser = await findUserInfo(userInfo.uid);
+        const result = await APIAccesser("user/"+userInfo.uid, "GET");
+        const tempUser = result.data;
         console.log("tempUser: "+ tempUser.email);
         setSelectedUser(tempUser);
     }
@@ -49,9 +50,7 @@ const UserProfile = ()=>{
             <Col sm = {12} md = {3} id = "sideBar">
                 <Row >
                     <Col sm = {12}>
-                    {/* <img src = "http://localhost:8080/account.jpg"></img> */}
                     <img src = "https://shopping-app-backend-v1.onrender.com/account.jpg"></img>
-                    {/* <img src = "https://drive.google.com/uc?id=12gEe_yoAYdCRfJyP7HlT2HYsn5jH9O7a&export=download"></img> */}
                     </Col>
                     <Col sm = {12}>
                         <h3 className = "text-center" style = {{color: "#28D095"}}>{selectedUser.name}</h3>
@@ -131,6 +130,7 @@ const SellItemPage = ()=>{
     const [itemPrice, setItemPrice] = useState("");
     const [itemLocation, setItemLocation] = useState("");
     const [itemDescription, setItemDescription] = useState("");
+    const [itemAmount, setItemAmount] = useState("");
     // const [imageURI, setImageURI] = useState("");
     var imageURI = "";
     const fileInput = createRef();
@@ -143,13 +143,28 @@ const SellItemPage = ()=>{
             setItemName(e.target.value);
         }
         else if(e.target.name == "itemPrice"){
+            // if(!isNaN(e.target.value) && Number(e.target.value) > -1){
+            //     setItemPrice(e.target.value);
+            // }
+            // else{
+            //     alert("Prices can not be negative or not a number");
+            // }
             setItemPrice(e.target.value);
         }
         else if(e.target.name == "itemDescription"){
             setItemDescription(e.target.value);
         }
-        else{
+        else if(e.target.name == "itemLocation"){
             setItemLocation(e.target.value);
+        }
+        else if(e.target.name == "itemAmount"){
+            // if(!isNaN(e.target.value) && Number(e.target.value) >=1 ){
+            //     setItemAmount(e.target.value)
+            // }
+            // else{
+            //     alert("Please enter the right amount.");
+            // }
+            setItemAmount(e.target.value);
         }
     }
     // useEffect(()=>{
@@ -157,7 +172,9 @@ const SellItemPage = ()=>{
     // }, [imageURI]);
     const handleSubmit = async (e)=>{
         e.preventDefault();
-        console.log(e.target.uploadFile.files[0]);
+        
+        if(!isNaN(itemPrice) &&  itemPrice >= 0 && !isNaN(itemAmount) && Number(itemAmount) > 0){
+            console.log(e.target.uploadFile.files[0]);
         let file = e.target.uploadFile.files[0];
         // setFile(e.target.value);
         formData.append('uploadFile', file);
@@ -179,55 +196,49 @@ const SellItemPage = ()=>{
         // });
 
 
-        const result = await APIAccesser("upload", "POST", formData, {
+        const fileResult = await APIAccesser("upload", "POST", formData, {
             headers:{
                 'Content-Type': 'multipart/form-data'
             }
         })
 
-        if(result.status != "failed"){
+        if(fileResult.status != "failed"){
             alert("Send successfully");
-            console.log(result.data);
+            console.log(fileResult.data);
             // setImageURI(response.data.imageURI);
-            imageURI = result.data.imageURI;
+            imageURI = fileResult.data.imageURI;
         }
         else{
-            alert("Error at uploading image: "+ result.data);
+            alert("Error at uploading image: "+ fileResult.data);
         }
-
-        const newItem = {
-            name: itemName,
-            price: itemPrice,
-            location: itemLocation,
-            description: itemDescription,
-            // imageURI: "http://localhost:8080/"+ e.target.uploadFile.files[0].name,
-            imageURI: imageURI,
-            seller: (JSON.parse(localStorage.userInfo).uid).toString()
-        }
-        if(imageURI != ""){
-            console.log(newItem.imageURI);
-            // await axios.post("http://localhost:8080/items", newItem)
-            // .then(response=>{
-            //     console.log(response.data);
-            // }
-            // )
-            // .catch(err=>{
-            //     console.log("Error at submitting new item's info: "+err);
-            //     alert("Please try to submit the new item to sell again");
-            // });
-
-            const result = await APIAccesser("items", "POST", newItem);
-            if(result.status != "failed"){
-                console.log(result.data);
+            const newItem = {
+                name: itemName != ""? itemName : "default_name",
+                price: itemPrice != ""? itemPrice: "0",
+                location: itemLocation != ""? itemLocation: "default_city",
+                description: itemDescription != ""? itemDescription: "default_description",
+                // imageURI: "http://localhost:8080/"+ e.target.uploadFile.files[0].name,
+                imageURI: imageURI,
+                seller: (JSON.parse(localStorage.userInfo).uid).toString(),
+                amount: itemAmount != "" || itemAmount != 0 ? itemAmount: "0"
+            }
+            if(imageURI != ""){
+                console.log(newItem.imageURI);
+                const result = await APIAccesser("items", "POST", newItem);
+                if(result.status != "failed"){
+                    console.log(result.data);
+                }
+                else{
+                    console.log("Error at submitting new item's info: "+result.data);
+                    alert("Please try to submit the new item to sell again");
+                }
             }
             else{
-                console.log("Error at submitting new item's info: "+result.data);
-                alert("Please try to submit the new item to sell again");
+                alert("Error. image URI is not yet set");
             }
         }
         else{
-            alert("Error. image URI is not yet set");
-        }
+            alert("Price must not be negative and amount larger than 0");
+        }      
     }
     return(
         <>
@@ -251,15 +262,18 @@ const SellItemPage = ()=>{
                 <label className = "mt-3">
                     <input type = "text" name = "itemPrice" value = {itemPrice} onChange = {handleChange}></input>
                 </label>
-
-
                 <h5>
                     Item Location
                 </h5>
                 <label className = "mt-3">
                     <input type = "text" name = "itemLocation" value = {itemLocation} onChange = {handleChange}></input>
                 </label>
-                
+                <h5>
+                    Item Amount
+                </h5>
+                <label className = "mt-3">
+                    <input type = "text" name = "itemAmount" value = {itemAmount} onChange = {handleChange}></input>
+                </label>
                 <h5>Select the Item's image</h5>
                 <label className = "mt-3">
                     <input type = "file" name = "uploadFile" required></input>

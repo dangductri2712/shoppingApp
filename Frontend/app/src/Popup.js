@@ -42,6 +42,7 @@ const Popup = ({handleShow, handleClose, show, item,addToCart})=>{
           </Modal.Header>
           <Modal.Body>Name: {item.name}</Modal.Body>
           <Modal.Body>Price: {item.price}</Modal.Body>
+          <Modal.Body>Total: {item.amount}</Modal.Body>
           <Modal.Body>Seller: {selectedSeller.name} (<b>{selectedSeller.email}</b>) </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>

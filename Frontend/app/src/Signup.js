@@ -41,7 +41,7 @@ const Signup = ({loggedIn, setLoggedIn})=>{
       //     alert("Something is wrong. Please check again");
       
       // }
-      try{
+      
         const result = await APIAccesser("users/signup", "POST", {
           name: name,
           email: email,
@@ -53,13 +53,11 @@ const Signup = ({loggedIn, setLoggedIn})=>{
             window.location.assign("/login");
         }
         else{
-          alert("Something is wrong. Please check again");
-          throw Error(result.status);
+          alert(result.data);
+          console.log(result.data);
+          // throw Error(result.data);
         }
-      }
-      catch(err){
-        console.log(err);
-      }
+      
   }
     return(
         <>
@@ -81,8 +79,9 @@ const Signup = ({loggedIn, setLoggedIn})=>{
                 window.location.assign("/login");
             }
             else{
-              alert("Something is wrong. Please check again");
-              throw Error(result.status);
+              // alert("Something is wrong. Please check again");
+              alert(result.data);
+              // throw result.status;
             }
           }
           catch(err){

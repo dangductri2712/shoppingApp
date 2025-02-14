@@ -101,10 +101,9 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
             //     console.log(err);
             // })
             const result = await APIAccesser("users/login", "POST", postBody);
-            if(result.data != "failed"){
+            if(result.status == "success"){
               console.log(result.data.user);
               alert("Authentication correct");
-              // getUserInfo(postBody.email);
               setLoggedIn(true);
               setUID(result.data.user.userID);
               changeUser(result.data.user);
@@ -119,7 +118,7 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
               }
             }
             else{
-              alert("Something is wrong. Please check again");
+              alert(result.data);
                 console.log(result.data);
             }
 
@@ -133,12 +132,12 @@ const Login = ({user,loggedIn, setLoggedIn, changeUser})=>{
       <Row>
       <label className = "mb-3">
         Email:
-        <input className = "inputBox" type="text" value={email} onChange={handleEmailChange} />
+        <input className = "inputBox" type="text" value={email} onChange={handleEmailChange} required/>
       </label>
       <Col>
       <label className = "mb-3">
         Password: 
-        <input className = "inputBox" type="password" value={password} onChange={handlePasswordChange} />
+        <input className = "inputBox" type="password" value={password} onChange={handlePasswordChange} required/>
       </label>
       </Col>   
       <input type="submit" value="Submit" /> 

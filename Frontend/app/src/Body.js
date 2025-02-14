@@ -142,9 +142,13 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
                 alert("Can not define this item. Please try again");
             }
             else{
-                var addedObject = {itemID: addedItem.itemID, name: addedItem.name, price: addedItem.price, amount: 1, seller: addedItem.seller, imageURI: addedItem.imageURI};
+                var itemTotal = 1;  //the total amount of the item being sold
+                if(addedItem.amount != undefined){
+                    itemTotal = addedItem.amount;
+                }
+                var addedObject = {itemID: addedItem.itemID, name: addedItem.name, price: addedItem.price, amount: 1, seller: addedItem.seller, imageURI: addedItem.imageURI, total: Number(itemTotal)};
                 var tempList = listConfirmation;
-                if(tempList.length == 0){
+                if(tempList.length == 0){   //if there is none in the list yet.
                     addedObject.amount = 1;
                     tempList.push(addedObject);
                     console.log("tempList: "+tempList);
@@ -158,8 +162,14 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
                         if(tempList[i].name == addedObject.name){
                             console.log(tempList);
                             identical = true;
+                            
                             tempAmount = tempList[i].amount + 1;
-                            tempList[i].amount = tempAmount;
+                            if(tempAmount < tempList[i].total){
+                                tempList[i].amount = tempAmount;
+                            }
+                            else{
+                                alert("It is already the maximum this item is sold for: "+tempList[i].total);
+                            }
                             tempList[i].imageURI = addedObject.imageURI;
                             console.log("tempList: "+tempList);
                             handleListConfirmation(tempList);
@@ -176,7 +186,7 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
                     }
                 }
                 console.log(tempList);
-                alert("Added to cart");
+                // alert("Added to cart");
                 calculateTotal();
             }   
         }
@@ -214,7 +224,10 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
                     {item.description}
                 </Card.Text>
                 <Card.Text>
-                    {item.price}
+                    Price: {item.price}
+                </Card.Text>
+                <Card.Text>
+                    Amount: {item.amount != undefined? item.amount : 1}
                 </Card.Text>
             </Card.Body>
         </Card>
@@ -239,6 +252,7 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
  *      an HTML structure containing a modal that will store all the items you are going to buy
  */
 const List = ({total,listConfirmation, handleListConfirmation})=>{
+    console.log(listConfirmation);
     const [show, handleShow] = useState(false);
     // const [total, setTotal] = useState(0);
     var tempList = [];
@@ -255,19 +269,27 @@ const List = ({total,listConfirmation, handleListConfirmation})=>{
      * @param {*} name Used to find the item in the listConfirmation.
      */
     const amountChanger = (symbol, name)=>{
-        console.log("Symbol:"+symbol +", name: "+ name)
+        console.log("Symbol:"+symbol +", name: "+ name);
+        
         var originalAmount = 0;
         var tempList = listConfirmation;
+        console.log(tempList);
         for(var i=0; i< tempList.length; i++){
             if(tempList[i].name == name){
                 originalAmount = tempList[i].amount
                 if(symbol=="+"){
-                    tempList[i].amount+=1;
-                    console.log(tempList[i].amount);
+                    if(originalAmount < tempList[i].total){
+                        tempList[i].amount+=1;
+                        console.log(tempList[i].amount);
+                    }
+                    else{
+                        alert("It is already maximum");
+                    }
                 }
-                else{
+                else if(tempList[i].amount >0){
                     tempList[i].amount-=1;
                 }
+                
             }
             if(i == tempList.length-1 && originalAmount == 0){
                 console.log("Can not find the item");

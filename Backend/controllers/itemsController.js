@@ -47,7 +47,8 @@ exports.insertItem = async (req,res)=> {
         itemID: newID.toString(),
         imageURI: req.body.imageURI != null ? req.body.imageURI : "https://backend-version1-4.onrender.com/unknown.jpg",
         itemLocation: req.body.location,
-        seller: req.body.seller != null? req.body.seller : "0"
+        seller: req.body.seller != null? req.body.seller : "0",
+        amount: req.body.amount != null? req.body.amount: "1"
     }
     await items.collection("shoppingItems").insertOne(insertBody);
     res.status(201).send(insertBody);

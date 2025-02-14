@@ -80,12 +80,19 @@ exports.insertUser = async (req,res)=>{
             if(err) throw err;
             console.log(result);
         });
+
+        if(req.body.password == null || req.body.email == null || req.body.name == null){
+            throw "Either password, email or name is empty. Please check again";
+        }
+        
         const addedUser = {
             name: req.body.name,
             email: req.body.email,
             password: hashedPassword,
             userID: 0
         }
+        
+        
         
         //CHECK IF THE USER HAS BEEN USED BEFORE OR NOT
         
@@ -98,7 +105,8 @@ exports.insertUser = async (req,res)=>{
             for(var i = 0; i< listOfUsers.length; i++){
                 if(listOfUsers[i].email == addedUser.email){
                     existingEmail = true;
-                    res.send("Email has been taken");
+                    // res.status(409).send("Email has been taken");
+                    throw "Email has been taken";
                     break;
                 }
             }
@@ -107,7 +115,7 @@ exports.insertUser = async (req,res)=>{
                 addedUser.userID = nextUserID;
                 if(addedUser.password == "" || addedUser.password == null || addedUser.password == "undefined"){
                     console.log("Hashed password can not be empty");
-                    throw Error("Hashed password can not be empty");                
+                    throw "Hashed password can not be empty";                
                 }
                 else{
                     console.log("addedUser.password: "+addedUser.password);
@@ -123,14 +131,16 @@ exports.insertUser = async (req,res)=>{
                 }
             }
             else{
-                throw Error("Email existed");   
+                throw "Email existed";   
             }
         }
         
         
     }
     catch(err){
-        console.log(err);
+        console.log("err: "+err);
+        res.status(409).send(err);
+        // res.send(err);
     }
 }
 
@@ -149,17 +159,9 @@ exports.checkForLogin = async (req,res)=>{
                     console.log("req.body.email: "+req.body.email);
                     console.log("req.body.password: "+req.body.password);
                     console.log("listOfUsers[i].password: "+listOfUsers[i].password);
-                    // bcrypt.compare(req.body.password, listOfUsers[i].password, (err,result)=>{
-                    //     if(err){
-                    //         console.log("There is an error at logging in: "+err);
-                    //     }
-                    //     console.log("Result of hashing is: "+ result);
-                    //     verification.password = result;
-                        
-                    // });
                     await bcrypt.compare(req.body.password, listOfUsers[i].password)
                     .then(res=>{
-                        console.log("Result of hasing is: "+res);
+                        console.log("Result of hashing is: "+res);
                         verification.password = res;
                     })
                     .catch(err=>{
@@ -175,16 +177,17 @@ exports.checkForLogin = async (req,res)=>{
         console.log("verification.email: "+ verification.email);
         console.log("verification.password: "+ verification.password);
         if(verification.email == false || verification.password == false){
-            res.status(500).send({verification: false});
-            throw Error("Either email or password is wrong");
+            // res.status(500).send({verification: false});
+            throw "Either email or password is wrong";
         }
         else if(verification.email == true && verification.password == true){
-            console.log("Verification successfull");
+            console.log("Verification successful");
             res.status(200).send({user: verification.user});
         }
     }
     catch(err){
         console.log(err);
+        res.status(401).send(err);
     }
 }
 
