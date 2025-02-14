@@ -205,7 +205,8 @@ const ItemCard = ({calculateTotal,chosenEmail, item, listConfirmation, handleLis
             item.sold == false || item.sold == null?
             <Col lg = {4}>
             <Card   style={{ width: '18rem' }} className = "mt-3 itemCard">
-        <Card.Img variant="top" src= {item.imageURI+ "&timestamp="+ new Date().getTime()} alt = "No image " width = "286px" height = "286px" style = {{objectFit: "contain"}}/>
+        <Card.Img variant="top" src= {item.imageURI+ "&random="+ Math.random().toString()} alt = "No image " width = "286px" height = "286px" style = {{objectFit: "contain"}}/>
+        
         {/* <Card.Img variant="top" src= "https://drive.google.com/file/d/12gEe_yoAYdCRfJyP7HlT2HYsn5jH9O7a&export=view&authuser=0/preview" alt = "No image from drive" width = "286px" height = "286px" style = {{objectFit: "contain"}}/> */}
             <Card.Body>
                 <Card.Title>{item.name}</Card.Title>
@@ -294,12 +295,6 @@ const List = ({total,listConfirmation, handleListConfirmation})=>{
         if(amount >= 1){
             for(var i =0; i< tempList.length; i++){
                 if(tempList[i].name == name){
-                    // tempList[i].amount -= 1;
-                    // console.log(tempList[i].name + " has the amount : "+ tempList[i].amount);
-                    // if(tempList[i].amount == 0){
-                    //     tempList.splice(i, 1);
-                    // }
-                    // break;
                     tempList.splice(i, 1);
                 }
                 
@@ -317,13 +312,7 @@ const List = ({total,listConfirmation, handleListConfirmation})=>{
         }
         
     }
-    // const calculateTotal = ()=>{
-    //     var tempTotal = 0;
-    //     listConfirmation.map(item=>{
-    //         tempTotal += Number(item.amount) * Number(item.price);
-    //     })
-    //     setTotal(tempTotal);
-    // }
+
     const handleConfirmPurchase = async ()=>{
         const historyPostBody = [];
         for(var i=0; i< listConfirmation.length; i++){
@@ -370,62 +359,62 @@ const List = ({total,listConfirmation, handleListConfirmation})=>{
                 <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
             </svg>
             </Button>
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Confirmation</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
+            <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Confirmation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
                 {/* <AddedItemsTable listConfirmation={listConfirmation} deleteItems={deleteItems}></AddedItemsTable> */}
-                <table className = "confirmation-table">
-        <th>Name</th>
-        <th className = "priceColumn">Price</th>
-        {
-            listConfirmation.map((item, index)=>{
-                return(
-                    <>
-                        {
-                        item.amount > 0 ?
-                        <tr key = {item}>
-                            <td>{item.name} (x{item.amount})</td>
-                            <td className = "priceColumn">{parseInt(item.price)* parseInt(item.amount)}</td>
-                            <td >
-                                <svg  className = "ms-4" onClick = {()=>{
-                                    deleteItems(item.name, item.amount)
-                                }}xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-</svg>
-                            </td>
-                            <td >
-                                <button className = "ms-3 btn-primary btn " onClick = {()=>{
-                                    amountChanger("+", item.name)
-                                }} >
-                                <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894z"/>
-</svg>
-                                </button>
-                            
-                            </td>
-                            <td>
-                                <button className = "btn-primary btn" onClick = {()=>{
-                                    amountChanger("-", item.name)
-                                }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-</svg>
-                                </button>
-                            
-                            </td>
-                        </tr>
-                    :
-                    <p></p>
-                    }
-                    </>
-                )
-            })
-        }
-        <tr>Total: {total}</tr>
-    </table>
+                        <table className = "confirmation-table">
+                <th>Name</th>
+                <th className = "priceColumn">Price</th>
+                {
+                    listConfirmation.map((item, index)=>{
+                        return(
+                            <>
+                                {
+                                item.amount > 0 ?
+                                <tr key = {item}>
+                                    <td>{item.name} (x{item.amount})</td>
+                                    <td className = "priceColumn">{parseInt(item.price)* parseInt(item.amount)}</td>
+                                    <td >
+                                        <svg  className = "ms-4" onClick = {()=>{
+                                            deleteItems(item.name, item.amount)
+                                        }}xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+        </svg>
+                                    </td>
+                                    <td >
+                                        <button className = "ms-3 btn-primary btn " onClick = {()=>{
+                                            amountChanger("+", item.name)
+                                        }} >
+                                        <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894z"/>
+        </svg>
+                                        </button>
+                                    
+                                    </td>
+                                    <td>
+                                        <button className = "btn-primary btn" onClick = {()=>{
+                                            amountChanger("-", item.name)
+                                        }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+        </svg>
+                                        </button>
+                                    
+                                    </td>
+                                </tr>
+                            :
+                            <p></p>
+                            }
+                            </>
+                        )
+                    })
+                }
+                <tr>Total: {total}</tr>
+            </table>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
@@ -442,7 +431,6 @@ const List = ({total,listConfirmation, handleListConfirmation})=>{
         </>
     )
 }
-
 
 const AddedItemsTable = ({listConfirmation, deleteItems})=>{
     

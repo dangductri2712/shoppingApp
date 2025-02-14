@@ -59,7 +59,7 @@ function Home() {
       <Row id = "bottom_cards" className = "mx-auto">
         <Col lg = {4}>
           <Card style={{ width: '18rem' , marginTop: "50px"}}>
-          <Card.Img variant="top" src= "https://backend-version1-4.onrender.com/account.jpg" alt = "No image " />
+          <Card.Img variant="top" src= "https://backend-version1-4.onrender.com/carousel_1.jpg" alt = "No image " />
           <Card.Body>
             <Card.Title>Explore items</Card.Title>
             <Card.Text>

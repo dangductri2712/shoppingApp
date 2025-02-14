@@ -251,9 +251,11 @@ const SellItemCard = ({item, updateItem})=>{
             }
         
     }
+    console.log(item);
     return(
         <Col sm = {6}>
         <Card style={{ width: '18rem' }} className = "mt-3">
+        
                 {
                     item.imageURI == undefined ?
                     <Card.Img variant = "top" width = "286px" height = "151px" style = {{objectFit: "cover"}}src = "https://shopping-app-backend-v1.onrender.comunknown.jpg" alt = "No image"></Card.Img>
@@ -261,13 +263,13 @@ const SellItemCard = ({item, updateItem})=>{
                     <Card.Img variant="top" width = "286px" height = "286px" style = {{objectFit: "contain"}} src= {item.imageURI} alt = "No image " />
                 }
             <Card.Body>
-                <Card.Title>{item.itemName}</Card.Title>
+            <Card.Title>{item.name}</Card.Title>        
                
                 {
                     editMode == false?
                     <>
                      <Card.Text>
-                        Sold: {item.sold != null?  item.sold.toString():  false}
+                        Sold: {item.sold != null?  item.sold.toString():  "false"}
                     </Card.Text>
                     <Card.Text>
                         Description: {item.description}
@@ -275,9 +277,9 @@ const SellItemCard = ({item, updateItem})=>{
                     <Card.Text>
                         Price: {item.price}
                     </Card.Text>
-                    <Card.Text>
+                    {/* <Card.Text>
                         Seller: {item.seller}
-                    </Card.Text>
+                    </Card.Text> */}
                 </>
                     :
                     <form enctype = "multipart/form-data" onSubmit = {handleSubmit}>

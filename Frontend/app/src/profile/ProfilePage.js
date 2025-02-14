@@ -163,11 +163,6 @@ const Buyer = ()=>{
                                 return(
                                     <HistoryRow buyer  = {buyer}></HistoryRow>
                                 )   
-                                
-                            
-                            // return(
-                            //     <HistoryRow buyer  = {buyer}></HistoryRow>
-                            // )
                         })
                     }
                 </>
@@ -192,13 +187,23 @@ const HistoryRow = ({buyer})=>{  //buyer is an array
                 buyer.map(b=>{
                     console.log(b);
                     return(
-                        <tr>
-                <td>{b.buyerName}</td>
-                <td>{b.buyerEmail}</td>
-                <td>{b.itemName}</td>
-                <td>{b.buyDate.substring(0,10)}</td>
-            </tr>
-                    )
+                        <>
+                            {
+                            b.status != "bought"?
+                                <tr>
+                                    <td>{b.buyerName}</td>
+                                    <td>{b.buyerEmail}</td>
+                                    <td>{b.itemName}</td>
+                                    <td>{b.buyDate.substring(0,10)}</td>
+                                </tr>
+                            
+                            :
+                            <></>
+                        }
+                        
+
+                        </>
+                                            )
                     
                 })
                 

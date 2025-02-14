@@ -5,17 +5,10 @@ const createReadStream = require('fs').createReadStream;
 const SCOPES = ["https://www.google.apis.com/auth/drive"];
 const AWS = require("aws-sdk");
 const { env } = require('process');
-// const s3 = new AWS.S3();
-
 const CLIENT_ID = env.CLIENT_ID;
 const REFRESH_TOKEN=env.GOOGLE_REFRESH_TOKEN
 const CLIENT_SECRET = env.CLIENT_SECRET
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
-// AWS.config.update({
-//     region: "us-east-1",
-//     accessKeyId: process.env.AWS_ACCESS_KEY,
-//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-// });
 
 const oauth2Client = new google.auth.OAuth2(
     CLIENT_ID,
@@ -23,13 +16,10 @@ const oauth2Client = new google.auth.OAuth2(
     REDIRECT_URI
 )
 
-
 oauth2Client.setCredentials({refresh_token: REFRESH_TOKEN});
 const drive = google.drive({version: 'v3', auth: oauth2Client});
-
 const multer = require('multer');
 const { runInNewContext } = require('vm');
-// const fs = require('fs');
 const path = require('path');
 
 
@@ -54,12 +44,6 @@ exports.uploadFile = async (req,res)=>{
     console.log("Sending file to drive");
     
     try{
-
-        // const form = formidable({multiples: true});
-        // form.parse(req, (err, fields, files)=>{
-        //     console.log('fields: ', fields);
-        //     console.log('files: ', files);
-        // })
         var fileMetaData = {
             name: "",
             parents: [env.DRIVE_FOLDER_ID]
@@ -171,7 +155,9 @@ exports.updateFile = async (req,res)=>{
                     fields: 'id, name'  //return important fields
                 });
                 console.log("response: "+response.data.id);
-                res.status(200).send({imageURI: "https://drive.google.com/thumbnail?id="+response.data.id});
+                let randomNum = Math.random().toString();
+                var url = "https://drive.google.com/thumbnail?id="+response.data.id;
+                res.status(200).send({imageURI: url});
             }
             catch(err){
                 console.log("Error updating file: "+err);
