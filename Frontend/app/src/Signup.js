@@ -41,19 +41,24 @@ const Signup = ({loggedIn, setLoggedIn})=>{
       //     alert("Something is wrong. Please check again");
       
       // }
-
-      const result = await APIAccesser("users/signup", "POST", {
-        name: name,
-        email: email,
-        password: password
-    });
-      if(result.status == "success"){
-        alert("Successfully create new login");
-          // setLoggedIn(true);
-          window.location.assign("/login");
+      try{
+        const result = await APIAccesser("users/signup", "POST", {
+          name: name,
+          email: email,
+          password: password
+      });
+        if(result.status == "success"){
+          alert("Successfully create new login");
+            // setLoggedIn(true);
+            window.location.assign("/login");
+        }
+        else{
+          alert("Something is wrong. Please check again");
+          throw Error(result.status);
+        }
       }
-      else{
-        alert("Something is wrong. Please check again");
+      catch(err){
+        console.log(err);
       }
   }
     return(
@@ -61,8 +66,28 @@ const Signup = ({loggedIn, setLoggedIn})=>{
           <Card id = "inputCard" style={{ width: '20rem'}} className = "mt-3 mx-auto">
         <Card.Img variant="top" src= "https://backend-version1-4.onrender.com/account.jpg" alt = "No image " />
         <Card.Body className = "cardBody">
-        <form  style = {{position: "relative"}} onSubmit={async (e)=>{
-          await handleSubmit();
+        <form  style = {{position: "relative"}} onSubmit={async (event)=>{
+          // await handleSubmit();
+          event.preventDefault();
+          try{
+            const result = await APIAccesser("users/signup", "POST", {
+              name: name,
+              email: email,
+              password: password
+          });
+            if(result.status == "success"){
+              alert("Successfully create new login");
+                // setLoggedIn(true);
+                window.location.assign("/login");
+            }
+            else{
+              alert("Something is wrong. Please check again");
+              throw Error(result.status);
+            }
+          }
+          catch(err){
+            console.log(err);
+          }
           // e.preventDefault();
           // await axios.post("http://localhost:8080/users/signup", {
           //   name: name,
